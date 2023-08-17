@@ -1,0 +1,19 @@
+main {
+	width: 100vw;
+	height: calc(100vh - 50px);
+}
+
+footer {
+	width: 100vw;
+	height: 50px;
+	display: grid;
+	grid-template-columns: repeat(4, 30px);
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+ul, li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
