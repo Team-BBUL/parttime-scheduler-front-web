@@ -4,8 +4,9 @@ import { Routes, Route } from "react-router";
 import SchedulePage from "./pages/schedule";
 // import ErrorPage from "./pages/404";
 import LoginPage from "./pages/login";
-import RegisterPage from "./pages/register";
-import RegistStorePage from "./pages/registStore";
+import SignUpPage from "./pages/signup";
+import RegistStorePage from "./pages/registstore";
+import AccountDetailsPage from "./pages/accountdetails";
 
 // const [scrollPosition, setScrollPosition] = useState(0);
 function App() {
@@ -14,8 +15,9 @@ function App() {
 			<Routes>
 				<Route path="/schedule" element={<SchedulePage />} />
 				<Route path="/login" element={<LoginPage />} />
-				<Route path="/register" element={<RegisterPage />} />
-				<Route path="/registStore" element={<RegistStorePage />} />
+				<Route path="/signup" element={<SignUpPage />} />
+				<Route path="/registstore" element={<RegistStorePage />} />
+				<Route path="/accountdetails" element={<AccountDetailsPage />} />
 				<Route path="/*" element={<LoginPage />} />
 			</Routes>
 		</Layout>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import "./index.css";
 import { useNavigate } from 'react-router-dom';
 
-const RegisterPage = () => {
+const SignUpPage = () => {
 
 	const [registerFormData, setRegisterFormData] = useState({
 		accountId: '',
@@ -36,6 +36,8 @@ const RegisterPage = () => {
 		  }
 	  };
 
+
+	  // 비밀번호 일치하는지 확인 / 경고 메시지
 	  const [passwordMismatch, setPasswordMismatch] = useState('');
 	  const handleChangeCheckPassword =  (e) => {
 		const { name, value } = e.target;
@@ -49,13 +51,31 @@ const RegisterPage = () => {
 			setPasswordMismatch(''); // 비밀번호 일치하면 메시지 감춤
 		  }
 	  };
-	  // 회원가입 오류 메시지
+
+
 	  const [registError, setRegistError] = useState(null);
 	  const navigate = useNavigate();
-
 	  const handleSubmit = async (e) => {
 		e.preventDefault();
-	
+		 // 아이디 길이 체크
+		 if (registerFormData.accountId.length < 3 || registerFormData.accountId.length > 20) {
+			setAccountIdError('아이디는 3자 이상 20자 이하로 입력하세요.');
+			return;
+		  } else {
+			setAccountIdError(''); // 길이가 유효하면 경고 메시지 초기화
+		  }
+		  if (registerFormData.password.length < 8 || registerFormData.password.length > 50) {
+			setPasswordError('비밀번호는 8자 이상 50자 이하로 입력하세요.');
+			return;
+		  } else {
+			setPasswordError(''); // 길이가 유효하면 경고 메시지 초기화
+		  }
+		  if (secondPasswordFormData.secondPassword !== registerFormData.password) { // 이름 변경 및 조건 변경
+			setPasswordMismatch('비밀번호가 일치하지 않습니다.'); // 비밀번호 불일치 메시지 표시
+			return;
+		  } else {
+			setPasswordMismatch(''); // 비밀번호 일치하면 메시지 감춤
+		  }	
 		try {
 		  const response = await axios.post('/api/auth/signup', registerFormData);
 		  console.log('회원가입 성공:', response.data);
@@ -124,4 +144,4 @@ const RegisterPage = () => {
 	);
 };
 
-export default RegisterPage;
+export default SignUpPage;

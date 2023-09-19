@@ -35,12 +35,22 @@ const LoginPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-		  const response = await axios.post('/api/auth/login', loginFormData);
-		  const token = response.headers.authorization;
-		  localStorage.setItem('jwtToken', token);
-
-		  console.log('로그인 성공:', response.data);
-		  window.location.href = '/schedule';
+			const response = await axios.post('/api/auth/login', loginFormData);
+			const token = response.headers.authorization;
+			localStorage.setItem('jwtToken', token); //로컬스토리지 jwt 저장
+			console.log('로그인 성공:', response.data);
+			if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
+				window.location.href = '/accountdetails';
+			} else {
+				if(response.data.user.alias === null){
+					window.location.href = '/accountdetails';
+				} else if(response.data.store === null) {
+					window.location.href = '/registstore';
+				} else {
+					window.location.href = '/schedule';
+				}
+			}
+		  
 		} catch (error) {
 		  console.error('로그인 실패:', error);
 		  if (error.response && error.response.status === 400) {
@@ -58,19 +68,28 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const handleRegisterClick = () => {
 		// '/register' 경로로 이동
-		navigate('/register');
+		navigate('/signup');
 	  };
 
 	return (
 		<div className="App">
 		<div className="login-container">
 		{signupSuccess && (
-		<div style={{ border: "1px solid", borderRadius: "10px", padding: "20px", paddingBottom: "0px",paddingTop: "10px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <p>회원가입이 완료되었습니다.</p>
-		<p>로그인 후 이용해주시기 바랍니다.</p>
+		<div 
+			style={{ 	border: "1px solid", 
+						borderRadius: "10px", 
+						padding: "20px", 
+						paddingBottom: "0px",
+						paddingTop: "10px",
+						display: "flex", 
+						flexDirection: "column", 
+						alignItems: "center" }}
+		>
+			<p>회원가입이 완료되었습니다.</p>
+			<p>로그인 후 이용해주시기 바랍니다.</p>
 		</div>
      	)}
-		<h2 style={{textAlign:"center", padding: "10px"}}>로그ㅁㄴㅇ인</h2>
+		<h2 style={{ textAlign:"center", padding: "10px"}}>로그인</h2>
 		<form onSubmit={handleSubmit}>
 		<div className="form-group">
 			  {/* <label htmlFor="accountId">아이디</label> */}
@@ -95,7 +114,19 @@ const LoginPage = () => {
 			{loginError && <p style={{ color: 'red' }}>{loginError}</p>}
 		<div style={{textAlign:"center"}}>
 		<button type="submit" style={{color: 'white'}}>로그인</button></div>
-		<div style={{textAlign:"center",  }}><button className="regi" type="register" onClick={handleRegisterClick}style={{color: 'white'}}>회원가입</button></div>
+
+		<div 
+			style={{textAlign:"center"}}
+		>
+			<button 
+				className="regi" 
+				type="register" 
+				onClick={handleRegisterClick}
+				style={{color: 'white'}}
+			>
+				회원가입
+			</button>
+		</div>
 		
 		</form>
 		</div>

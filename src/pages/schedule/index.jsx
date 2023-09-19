@@ -11,40 +11,40 @@ import axios from 'axios';
 
 const SchedulePage = () => {
 	const navigate = useNavigate();
+
+	// JWT토큰이 발행된 것이 없다면 로그인 페이지로 이동 
 	useEffect(() => {
 		const token = localStorage.getItem('jwtToken');
 		if (!token) {
 		  navigate('/login');
 		}
 	  }, []);
-
-	const [roleForm] = useState({
-		role: 'MANAGER'
-	});
-  useEffect(() => {
+	
+	// 헤더파일에 토큰 추가
 	const token = localStorage.getItem('jwtToken');
 	const axiosConfig = {
 		headers: {
-		  'Authorization': `${token}`, // 토큰을 헤더파일에 추가
+		'Authorization': `${token}`,
 		},
-	  };
-	  
-    // API 요청 보내기
-    axios.get('/store/my-list?role=MANAGER',  axiosConfig)
-      .then((response) => {
+	};
 
-		if(response.data.data){
-			console.log('Store 존재');
-		} else{
-			navigate('/registStore'); // 이동할 페이지 경로 설정
-		}
+	// // 매장이 등록되어 있는 것이 없으면 매장등록으로 이동 
+  	// useEffect(() => {
+	// 	// API 요청 보내기
+	// 	axios.get('/store/my-list?role=MANAGER',  axiosConfig)
+	// 	.then((response) => {
 
-      })
-      .catch((error) => {
-        console.error('API 요청 실패:', error);
-        // 에러 처리 로직 추가
-      });
-  }, [navigate]);
+	// 		if(response.data.data){
+	// 			console.log('Store 존재');
+	// 		} else{
+	// 			navigate('/registstore'); // 이동할 페이지 경로 설정
+	// 		}
+	// 	})
+	// 	.catch((error) => {
+    //     console.error('my-list API 요청 실패:', error);
+    //     // 에러 처리 로직 추가
+    //   });
+  	// }, [navigate]);
 
 
 

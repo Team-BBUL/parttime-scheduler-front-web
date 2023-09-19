@@ -4,7 +4,7 @@ import "./index.css";
 // import { useNavigate } from 'react-router-dom';
 
 const RegistStorePage = () => {
-	const [storeForm, setStoreForm] = useState({
+	const [storeFormData, setStoreFormData] = useState({
 		name: '',
 		location: '',
 		phone: '',
@@ -12,76 +12,142 @@ const RegistStorePage = () => {
 		closed: 0,
 		payday: 0,
 		startDayOfWeek: 1,
-		deadlineOfSubmit: 0,
+		deadlineOfSubmit: '',
 	});
-	//지역번호
-	const [phoneForm, setPhoneForm] = useState({
+	//지역번호 + 중간번호 +마지막번호
+	const [phoneFormData, setPhoneFormData] = useState({
 		areaCode: '02',
 		phoneMiddle: '',
 		phoneLast: ''
 	})
-	
+
+	// 전화번호 저장 핸들러
 	const handlePhoneFormChange = async (e) => {
 		const { name, value } = e.target;
 		// 입력값이 숫자인지 확인
 		if (!isNaN(value)) {
-			setPhoneForm({
-			...phoneForm,
+			setPhoneFormData({
+			...phoneFormData,
 			[name]: value,
 			});
 			// setPhoneError(''); // 숫자 입력이므로 에러 메시지 초기화
 		}
-		const phoneAdded = phoneForm.areaCode + '-' + phoneForm.phoneMiddle + '-' + phoneForm.phoneLast;
+		const phoneAdded = phoneFormData.areaCode + '-' + phoneFormData.phoneMiddle + '-' + phoneFormData.phoneLast;
 		console.log(phoneAdded);
-		console.log(storeForm.phone);
-		setStoreForm({
-			...storeForm,
+		console.log(storeFormData.phone);
+		setStoreFormData({
+			...storeFormData,
 			phone: phoneAdded,
 		});
 	};	
 	const handleKeyUp = (e) =>{
 		
-		const phoneAdded = phoneForm.areaCode + '-' + phoneForm.phoneMiddle + '-' + phoneForm.phoneLast;	
+		const phoneAdded = phoneFormData.areaCode + '-' + phoneFormData.phoneMiddle + '-' + phoneFormData.phoneLast;	
 		console.log(phoneAdded);
-		setStoreForm({
-			...storeForm,
+		setStoreFormData({
+			...storeFormData,
 			phone: phoneAdded,
 		});
-		console.log(phoneForm.phone);
+		console.log(phoneFormData.phone);
 	}
+
+	// 숫자만 입력되는 핸들러
+	const handleOnlyNumChange = async (e) => {
+		const { name, value } = e.target;
+		// 입력값이 숫자인지 확인
+		if (!isNaN(value)) {
+			setStoreFormData({
+			...storeFormData,
+			[name]: value,
+			});
+		}
+	};	
 
 	// 입력 폼의 변경 핸들러
 	const handleChange = async (e) => {
 	const { name, value } = e.target;
-	const phoneAdded = phoneForm.areaCode + '-' + phoneForm.phoneMiddle + '-' + phoneForm.phoneLast;
+	const phoneAdded = phoneFormData.areaCode + '-' + phoneFormData.phoneMiddle + '-' + phoneFormData.phoneLast;
 	console.log(phoneAdded);
-	setStoreForm({
-		...storeForm,
+	setStoreFormData({
+		...storeFormData,
 		phone: phoneAdded,
 	});
-	console.log(phoneForm.phone);
-	setStoreForm({
-		...storeForm,
+	console.log(phoneFormData.phone);
+	setStoreFormData({
+		...storeFormData,
 		[name]: value,
 	});
-
-	
 	};
-
+	const [nameBlankError, setNameBlankError] = useState();
+	const [locationBlankError, setLocationBlankError] = useState();
+	const [phoneNumberError, setPhoneNumberError] = useState();
+	const [runningTimeError, setRunningTimeError] = useState();
+	const [deadLineError, setDeadLineError] = useState();
 
 
 	//매장등록폼데이터 제출 핸들러 및 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		console.log(storeFormData.open);
+		console.log(storeFormData.closed);
+		// 매장명 validation
+		if (!storeFormData.name){
+			setNameBlankError('매장명을 입력해주세요');
+			return;
+		} else {
+			setNameBlankError('');
+		}
+
+		// 매장위치 validation
+		if(!storeFormData.location){
+			setLocationBlankError('매장 위치를 입력해주세요');
+			return;
+		} else {
+			setLocationBlankError('');
+		}
+
+		// 전화번호 validation
+		if(phoneFormData.phoneMiddle.length < 3 || phoneFormData.phoneMiddle.length > 4 ){
+			setPhoneNumberError('잘못된 전화번호입니다.');
+			return;
+		} else {
+			setPhoneNumberError('');
+		}
+		if(phoneFormData.phoneLast.length < 3 || phoneFormData.phoneLast.length > 4 ){
+			setPhoneNumberError('잘못된 전화번호입니다.');
+			return;
+		} else {
+			setPhoneNumberError('');
+		}
+
+		// 운영시간 validation
+		const openHour = parseInt(storeFormData.open);
+		const closedHour = parseInt(storeFormData.closed);
+		if (openHour >= closedHour) {
+		  setRunningTimeError('시작 시간은 종료 시간보다 <br /> 이전이어야 합니다.');
+		  return;
+		} else {
+		  setRunningTimeError('');
+		}
+
+		// 마감일 validation 
+		if(!storeFormData.deadlineOfSubmit || parseInt(storeFormData.deadlineOfSubmit) < 1 ){
+			setDeadLineError('마감일은 최소 1일 이상으로 입력하세요');
+			return;
+		} else {
+			setDeadLineError('');
+		}	
+
+
+		// 헤더에 토큰 추가
 		const token = localStorage.getItem('jwtToken');
 		const axiosConfig = {
 			headers: {
-			  'Authorization': `${token}`, // 토큰을 헤더파일에 추가
+			  'Authorization': `${token}`, 
 			},
-		  };
-		  
+		};  
 		try {
-		  const response = await axios.post('/store/regist', storeForm, axiosConfig);
+		  const response = await axios.post('/store/regist', storeFormData, axiosConfig);
 		  console.log('매장등록 성공:', response.data);
 		  window.location.href = '/schedule';
 		} catch (error) {
@@ -95,35 +161,36 @@ const RegistStorePage = () => {
 		  <h2 style={{textAlign:"center", width: "300px"}}>매장 등록</h2>
 
 		  <form onSubmit={handleSubmit}>
+
 			<div className="form-group">
-			{/* <label htmlFor="name">매장명</label> */}
 			<input
+				placeholder='매장명 : ex) 광화문점 '
 				type="text"
 				id="name"
 				name="name"
-				placeholder='매장명'
-				value={storeForm.name}
+				value={storeFormData.name}
 				onChange={handleChange}
 			/>
 			</div>
+			{nameBlankError && <p style={{ color: 'red', textAlign: 'center' }}>{nameBlankError}</p>}			
 			<div className="form-group">
-			{/* <label htmlFor="location">매장 위치</label> */}
 			<input
+				placeholder='매장 위치 : ex) 서울 종로구 종로5길 7 '			
 				type="text"
 				id="location"
 				name="location"
-				placeholder='매장 위치'
-				value={storeForm.location}
+				value={storeFormData.location}
 				onChange={handleChange}
 			/>
 			</div>
+			{locationBlankError && <p style={{ color: 'red', textAlign: 'center' }}>{locationBlankError}</p>}
 			<div className="form-group">
 			<label htmlFor="phone">매장 전화번호</label>
 			<div className="phone-input">
 			<select
 				id="areaCode"
 				name="areaCode"
-				value={phoneForm.areaCode}
+				value={phoneFormData.areaCode}
 				onChange={handlePhoneFormChange}
 				style={{margin: '10px', padding: '3px'}}
 			>
@@ -147,31 +214,35 @@ const RegistStorePage = () => {
 			</select>
 			<span style={{padding: '10px'}}>-</span>
 			<input
+			placeholder='1234'
 			type="text"
 			id="phoneMiddle"
 			name="phoneMiddle"
-			value={phoneForm.phoneMiddle}
+			value={phoneFormData.phoneMiddle}
 			onChange={handlePhoneFormChange}
 			style={{width: '20%'}}
 			/>
 			<span style={{padding: '10px'}}>-</span>
 			<input
+			placeholder='5678'
 			type="text"
 			id="phoneLast"
 			name="phoneLast"
-			value={phoneForm.phoneLast}
+			value={phoneFormData.phoneLast}
 			onChange={handlePhoneFormChange}
 			style={{width: '20%'}}
 			onKeyUp={handleKeyUp}
 			/>
 			</div>
 			</div>
+			{phoneNumberError && <p style={{ color: 'red', textAlign: 'center' }}>{phoneNumberError}</p>}
+
 			<div className="form-group">
 			<label htmlFor="open">매장 운영시간</label>
 			<select
 				id="open"
 				name="open"
-				value={storeForm.open}
+				value={storeFormData.open}
 				onChange={handleChange}
 				style={{margin: '10px', padding: '3px'}}
 			>
@@ -204,7 +275,7 @@ const RegistStorePage = () => {
 			<select
 				id="closed"
 				name="closed"
-				value={storeForm.closed}
+				value={storeFormData.closed}
 				onChange={handleChange}
 				style={{margin: '10px', padding: '3px'}}
 			>
@@ -234,12 +305,15 @@ const RegistStorePage = () => {
 				<option value={23}>23:00</option>
 			</select>
 			</div>
+			{runningTimeError && (<p style={{ color: 'red', textAlign: 'center' }}
+									dangerouslySetInnerHTML={{ __html: runningTimeError }}/>
+			)}
 			<div className="form-group">
 			<label htmlFor="payday">급여일</label>
 			<select
 				id="payday"
 				name="payday"
-				value={storeForm.payday}
+				value={storeFormData.payday}
 				onChange={handleChange}
 				style={{margin: '10px', padding: '3px'}}
 			>
@@ -250,12 +324,13 @@ const RegistStorePage = () => {
 				))}
 			</select>
 			</div>
+
 			<div className="form-group">
 			<label htmlFor="startDayOfWeek">주간 근무표 시작 요일</label>
 			<select
 				id="startDayOfWeek"
 				name="startDayOfWeek"
-				value={parseInt(storeForm.startDayOfWeek)}
+				value={parseInt(storeFormData.startDayOfWeek)}
 				onChange={handleChange}
 				style={{margin: '10px', padding: '3px'}}
 			>
@@ -268,17 +343,19 @@ const RegistStorePage = () => {
 				<option value={7}>일요일</option>
 			</select>
 			</div>
+
+			{/* 근무 불가능 시간 선택 마감일 */}
 			<div className="form-group">
 			<label htmlFor="deadlineOfSubmit">근무 불가능 시간 선택 마감일</label>
-			<span style={{fontsize: '10px'}}>근무 시작일 - n일전 마감</span>
 			<input
-				type="number"
+				placeholder='근무 시작일 - n일전 마감 : ex) 2'
 				id="deadlineOfSubmit"
 				name="deadlineOfSubmit"
-				value={storeForm.deadlineOfSubmit}
-				onChange={handleChange}
+				value={storeFormData.deadlineOfSubmit}
+				onChange={handleOnlyNumChange}
 			/>
 			</div>
+			{deadLineError && <p style={{ color: 'red', textAlign: 'center' }}>{deadLineError}</p>}
 			<div style={{textAlign:"center"}}>
 			<button type="submit" style={{color: 'white'}}>매장 등록</button></div>
 		  </form>
