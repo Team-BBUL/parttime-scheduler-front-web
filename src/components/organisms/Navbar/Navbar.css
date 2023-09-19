@@ -1,0 +1,12 @@
+.bg-body-tertiary {
+    background-color: #FF89B4 !important;
+  }
+
+ol, ul {
+    padding-left: 0rem !important;
+}
+
+*, ::after, ::before {
+  box-sizing: content-box;
+}
+  

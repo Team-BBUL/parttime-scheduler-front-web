@@ -1,0 +1,26 @@
+import "./styles/global.css";
+import { Layout } from "./components/templates/Layout/Layout";
+import { Routes, Route } from "react-router";
+import SchedulePage from "./pages/schedule";
+// import ErrorPage from "./pages/404";
+import LoginPage from "./pages/login";
+import RegisterPage from "./pages/register";
+import RegistStorePage from "./pages/registStore";
+
+// const [scrollPosition, setScrollPosition] = useState(0);
+function App() {
+	return (
+		<Layout>
+			<Routes>
+				<Route path="/schedule" element={<SchedulePage />} />
+				<Route path="/login" element={<LoginPage />} />
+				<Route path="/register" element={<RegisterPage />} />
+				<Route path="/registStore" element={<RegistStorePage />} />
+				<Route path="/*" element={<LoginPage />} />
+			</Routes>
+		</Layout>
+		
+	);
+}
+
+export default App;

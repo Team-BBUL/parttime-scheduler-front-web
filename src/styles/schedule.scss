@@ -1,0 +1,11 @@
+.schedule {
+	height: calc(100vh - 50px);
+
+	.schedule__divide__line {
+		width: calc(100vw - 20px * 2);
+		height: 1px;
+		margin: 0 20px;
+		background-color: #ddd;
+		// border-bottom: 1px solid #ccc;
+	}
+}

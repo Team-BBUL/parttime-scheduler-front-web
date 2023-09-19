@@ -1,0 +1,61 @@
+.schedule__content {
+  // width: 100vw;
+  display: flex;
+  max-height: calc(100vh - 50px - 50px);
+  flex-wrap: wrap;
+
+  > div {
+    &:first-child {
+      width: 15%;
+      height: 100%;
+    }
+  }
+
+  .schedule__day {
+    display: flex;
+    width: calc(100% - 40px);
+    overflow-x: auto;
+    margin: 0px;
+    
+    > li {
+      width: 20%;
+      margin-right: 9px;
+      position: relative;
+
+      > p {
+        padding: 0 25px;
+        height: 45px;
+        white-space: nowrap;
+        margin: 0;
+        line-height: calc(45px - 6px * 2 / 2);
+      }
+
+      .schedule__work {
+        display: flex;
+        height: 42px;
+        margin-bottom: 3px;
+        // height: calc(100% - 45px );\
+        background-color: #EFEFEF;
+        position: relative;
+        > div {
+          width: 100%;
+          color: white;
+        }
+      }
+
+      .schedule__employee_work {
+        position: absolute;
+        top: 45px;
+        width: 20%;
+        grid-row-start: 1;
+        // height: 40%;
+        height: calc(60% - 45px - 3px);
+        background-color: #C275FF;
+      }
+    }
+  }
+}
+
+#droppable {
+  background-color: transparent;
+}

@@ -1,0 +1,19 @@
+.sidebar {
+    width: 300px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease-in-out;
+    color: red; /* 글자 색상을 빨간색으로 설정 */
+  }
+  
+  .sidebar.fixed {
+    position: fixed;
+    top: 100px;
+    transform: translateX(-100%);
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
