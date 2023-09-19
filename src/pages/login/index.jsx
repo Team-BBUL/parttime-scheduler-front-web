@@ -70,7 +70,7 @@ const LoginPage = () => {
 		<p>로그인 후 이용해주시기 바랍니다.</p>
 		</div>
      	)}
-		<h2 style={{textAlign:"center", padding: "10px"}}>로그인</h2>
+		<h2 style={{textAlign:"center", padding: "10px"}}>로그ㅁㄴㅇ인</h2>
 		<form onSubmit={handleSubmit}>
 		<div className="form-group">
 			  {/* <label htmlFor="accountId">아이디</label> */}
