@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import { ScheduleEmployee, ScheduleTimeLayout } from "../../molecules";
 import styles from "./ScheduleContent.module.scss";
 import { Warning, WorkingTime } from "../index";
@@ -9,16 +9,34 @@ import { ScheduleTimeDataArray } from "../../../pages/api/ScheduleTimeDataArray"
 import { deleteSchedule } from "../../../pages/api/schedule/scheduleAPI";
 
 const ScheduleContent = ({ startDate, endDate, dateArray }) => {
-	// const [scheduleData, setScheduleData] = useState([]);
-	// const storeId = 1;
-	// const yourRoleId = 5;
-	// const ver = new Date("2023-09-10 09:30:00.000000");
-	// const year = 2023;
-	// const month = 9;
-	// const apiday = 10;
+	
+	const [userList, setUserList] = useState([]); //api 연결해서 데이터 넣어서 state로 관리.
+	
+	useEffect(() => {
+		const token = localStorage.getItem('jwtToken');
+		const axiosConfig = {
+			headers: {
+			  'Authorization': `${token}`, 
+			},
+		};
+		const storeId = localStorage.getItem('storeId');
+		axios.get(`/api/employees/${storeId}`, axiosConfig)
+		  .then((response) => {
+			const employeesArray = response.data.data;
+			console.log(response.data.data);
 
-	const [userList, setUserList] = useState([...ScheduleEmployeeArray]); //api 연결해서 데이터 넣어서 state로 관리.
+			// role이 MANAGER인 애들 제외
+			const filteredUserList = employeesArray.filter((employee) => employee.role !== "MANAGER");
 
+			// date 배열을 scheduleList 상태에 저장
+			setUserList(filteredUserList);
+			console.log(userList);
+		  })
+		  .catch((error) => {
+			console.error('API 요청 에러:', error);
+		  });
+	  }, []);
+	console.log(userList);
 	const [isDraggingOver, setIsDraggingOver] = useState(false);
 
 	const dragFunction = (event, type) => {
@@ -56,7 +74,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 	const convertFormattedDate = (value) => (value < 10 ? `0${value}` : value);
 	/* dateArray = 일주일짜리 배열 / 인스턴스 = '2023-08-28', '2023-08-29' ... 
 	getDateArray = 	year: currentDate.getFullYear(), / 2023 
-					month: currentDate.getMonth() + 1, / 08 ? +1의 존재의 이유
+					month: currentDate.getMonth() + 1, / 08 
 					day: currentDate.getDate() / 28
 	*/
 	const dayArray = getDateArray(dateArray);
@@ -68,7 +86,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 			)}-${convertFormattedDate(current.day)}`
 	);
 	
-	
+				
 	/*
 	{[...Array(28)].map((_, index) => (
 		<option key={index + 1} value={index + 1}>
@@ -84,21 +102,57 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 	// ).forEach((current) => (sum += current.workers.length));
 
 	const getWorkerColor = (workerId) => {
-		const worker = ScheduleEmployeeArray.find((emp) => emp.id === workerId);
+		const worker = userList.find((emp) => emp.id === workerId);
 		if (worker) {
-			return worker.color;
+			// 0xFFFFFFFF 형식의 16진수 색상 코드에서 각 부분 추출
+			const alpha = (worker.color >> 24) & 0xFF;
+			const red = (worker.color >> 16) & 0xFF;
+			const green = (worker.color >> 8) & 0xFF;
+			const blue = worker.color & 0xFF;
+			
+			// 추출한 부분을 CSS 형식으로 조합
+			const cssColor = `rgba(${red}, ${green}, ${blue}, ${(alpha / 255).toFixed(2)})`;
+			return cssColor;
 		}
 		// 만약 해당 workerId를 가진 worker가 없다면 기본 색상을 반환하도록 설정
 		return "#000000"; // 예: 기본 검은색. 원하는 색상으로 변경 가능
 	};
 
 	const getWorkerName = (workerId) => {
-		const worker = ScheduleEmployeeArray.find((emp) => emp.id === workerId);
+		const worker = userList.find((emp) => emp.id === workerId);
 		if (worker) {
-			return worker.name;
+			return worker.alias;
 		}
 		return "";
 	};
+
+	const [scheduleList, setScheduleList] = useState([]);
+	useEffect(() => {
+
+		const token = localStorage.getItem('jwtToken');
+		const axiosConfig = {
+			headers: {
+			  'Authorization': `${token}`, 
+			},
+		};
+		const storeId = localStorage.getItem('storeId');
+		const roleId = localStorage.getItem('roleId');
+		const version = '2023-06-11T22:03:58';
+		const year = startDate.getFullYear();
+		const month = startDate.getMonth() + 1;
+		const day = startDate.getDate();
+		axios.get(`/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+		  .then((response) => {
+			// 응답에서 date 배열 추출
+			const dateArray = response.data.date;
+			
+			// date 배열을 scheduleList 상태에 저장
+			setScheduleList(dateArray);
+		  })
+		  .catch((error) => {
+			console.error('API 요청 에러:', error);
+		  });
+	  }, []);
 
 	return (
 		<div className={styles.schedule__content} style={{ display: "flex" }}>
@@ -110,7 +164,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 							<p style={{textAlign: 'center'}}>{`${currentDay.day}일`}</p>
 							{timeArray.map((currentHour, hourIndex) => {
 								//
-								const workersForThisTimeSlot = ScheduleTimeDataArray.filter(
+								const workersForThisTimeSlot = scheduleList.filter(
 									(schedule) =>
 										schedule.day ===
 											`${currentDay.year}-${convertFormattedDate(
@@ -129,20 +183,21 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 										key={hourIndex}
 									>
 										{workersForThisTimeSlot.map((workerSchedule) =>
-											workerSchedule.workers.map((workerId) => (
+											workerSchedule.workers.map((worker) => (
 
 												// 각 1시간 단위 div태그 
 												<div
-													key={workerId}
+													key={worker.id}
 													style={{
-														backgroundColor: getWorkerColor(workerId),
+														backgroundColor: getWorkerColor(worker.id),
 														padding: "2px",
 														margin: "1px",
 														cursor: "pointer",
+														borderRadius: '5px',
 													}}
-													onClick={() => deleteScheduleClickEvent(workerId)}
+													onClick={() => deleteScheduleClickEvent(worker.id)}
 												>
-													{getWorkerName(workerId)} 
+													{getWorkerName(worker.id)} 
 												</div>
 											))
 										)}
@@ -155,7 +210,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 			</div>
 			<div style={{ flex: 1 }}>
 				<div className="sidebar">
-					<Warning />
+					{/* <Warning /> */}
 					<WorkingTime />
 				</div>
 			</div>

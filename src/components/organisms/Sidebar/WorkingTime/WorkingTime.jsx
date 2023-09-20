@@ -2,15 +2,6 @@ import React, { useState } from "react";
 import "./WorkingTime.css";
 import { ScheduleTimeDataArray } from "../../../../pages/api/ScheduleTimeDataArray";
 import { ScheduleEmployeeArray } from "../../../../pages/api/ScheduleEmployeeArray";
-const items = [
-	{ left: "김민수", right: "7시간" },
-	{ left: "김철수", right: "0시간" },
-	// { left: 'Item 3', right: '0' },
-	// { left: 'Item 4', right: '0' },
-	// { left: 'Item 5', right: '0' },
-	// { left: 'Item 6', right: '0' },
-];
-
 function WorkingTime() {
 	const countTrueValues = (timeArray) => {
 		return timeArray.filter((value) => value).length;
