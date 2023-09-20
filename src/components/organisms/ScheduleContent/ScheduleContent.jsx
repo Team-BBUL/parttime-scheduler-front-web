@@ -211,7 +211,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 			<div style={{ flex: 1 }}>
 				<div className="sidebar">
 					{/* <Warning /> */}
-					<WorkingTime />
+					<WorkingTime userList={userList} scheduleList={scheduleList}/>
 				</div>
 			</div>
 
