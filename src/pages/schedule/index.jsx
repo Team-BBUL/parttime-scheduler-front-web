@@ -48,8 +48,11 @@ const SchedulePage = () => {
 
 
 
+
+	
 	const [date, setDate] = useState(new Date("2023-08-28"));
 	const [startDate, setStartDate] = useState(new Date(date));
+	
 	const [dateArray, setDateArray] = useState([]);
 	const [endDate, setEndDate] = useState(dateArray[dateArray.length - 1]);
 

@@ -51,15 +51,31 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 		}
 	};
 
-	const convertFormattedDate = (value) => (value < 10 ? `0${value}` : value);
 
+
+	const convertFormattedDate = (value) => (value < 10 ? `0${value}` : value);
+	/* dateArray = 일주일짜리 배열 / 인스턴스 = '2023-08-28', '2023-08-29' ... 
+	getDateArray = 	year: currentDate.getFullYear(), / 2023 
+					month: currentDate.getMonth() + 1, / 08 ? +1의 존재의 이유
+					day: currentDate.getDate() / 28
+	*/
 	const dayArray = getDateArray(dateArray);
+
 	const fullDayArray = dayArray.map(
 		(current) =>
 			`${current.year}-${convertFormattedDate(
 				current.month
 			)}-${convertFormattedDate(current.day)}`
 	);
+	
+	
+	/*
+	{[...Array(28)].map((_, index) => (
+		<option key={index + 1} value={index + 1}>
+		{index + 1}일
+		</option>
+	))} 참고해서 api호출로 받은 store객체 open~closed로 바꾸기 
+	*/
 	const timeArray = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
 	// let sum = 0;
@@ -93,6 +109,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 						<li key={dayIndex}>
 							<p style={{textAlign: 'center'}}>{`${currentDay.day}일`}</p>
 							{timeArray.map((currentHour, hourIndex) => {
+								//
 								const workersForThisTimeSlot = ScheduleTimeDataArray.filter(
 									(schedule) =>
 										schedule.day ===
@@ -113,6 +130,8 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 									>
 										{workersForThisTimeSlot.map((workerSchedule) =>
 											workerSchedule.workers.map((workerId) => (
+
+												// 각 1시간 단위 div태그 
 												<div
 													key={workerId}
 													style={{
@@ -123,7 +142,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 													}}
 													onClick={() => deleteScheduleClickEvent(workerId)}
 												>
-													{getWorkerName(workerId)}
+													{getWorkerName(workerId)} 
 												</div>
 											))
 										)}

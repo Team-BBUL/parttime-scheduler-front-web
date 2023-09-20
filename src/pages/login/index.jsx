@@ -38,6 +38,7 @@ const LoginPage = () => {
 			const response = await axios.post('/api/auth/login', loginFormData);
 			const token = response.headers.authorization;
 			localStorage.setItem('jwtToken', token); //로컬스토리지 jwt 저장
+			localStorage.setItem('storeId', response.data.store);
 			console.log('로그인 성공:', response.data);
 			if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
 				window.location.href = '/accountdetails';

@@ -25,7 +25,7 @@ function Navbarcr() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem('jwtToken'); // 로그아웃 시 토큰 제거
-
+    localStorage.removeItem('storeId');
     // 로그아웃 후 /login 페이지로 이동
     navigate('/login');
   };
