@@ -108,7 +108,7 @@ const SchedulePage = () => {
 				'Authorization': `${token}`, 
 				},
 			};
-			
+			//s
 			const year = startDate.getFullYear();
 			const month = startDate.getMonth() + 1;
 			const day = startDate.getDate();		
