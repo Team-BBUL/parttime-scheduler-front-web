@@ -6,7 +6,7 @@ import SchedulePage from "./pages/schedule";
 import LoginPage from "./pages/login";
 import SignUpPage from "./pages/signup";
 import AccountDetailsPage from "./pages/accountdetails";
-import RegistStorePage from "./pages/registstore";
+import RegistStorePage from "./pages/registStore";
 
 // const [scrollPosition, setScrollPosition] = useState(0);
 function App() {
