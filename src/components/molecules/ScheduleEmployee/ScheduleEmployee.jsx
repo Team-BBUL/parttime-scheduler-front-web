@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Label } from "../../atoms";
 import styles from "./ScheduleEmployee.module.scss";
 
-const ScheduleEmployee = ({ userList }) => {
+const ScheduleEmployee = ({ userList, flex }) => {
 	const getWorkerColor = (workerId) => {
 		const worker = userList.find((emp) => emp.id === workerId);
 		if (worker) {
@@ -19,6 +19,10 @@ const ScheduleEmployee = ({ userList }) => {
 		// 만약 해당 workerId를 가진 worker가 없다면 기본 색상을 반환하도록 설정
 		return "#000000"; // 예: 기본 검은색. 원하는 색상으로 변경 가능
 	};
+	const handleDragStart = (event) =>{
+		const data = event.target.getAttribute("class");
+		event.dataTransfer.setData('text/plain', JSON.stringify(data));
+	  }
 	return (
 		<div className={styles.schedule__employee}>
 			{userList.map((current, index) => (
@@ -26,6 +30,7 @@ const ScheduleEmployee = ({ userList }) => {
 					key={index}
 					className={current.id}
 					draggable="true"
+					onDragStart={handleDragStart}
 					style={{ backgroundColor: getWorkerColor(current.id)}}
 				>
 					<Label text={current.alias} />

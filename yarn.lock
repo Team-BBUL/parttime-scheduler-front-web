@@ -7592,6 +7592,11 @@ react-scripts@^5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
+react-selectable-fast@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/react-selectable-fast/-/react-selectable-fast-3.4.0.tgz#fb3e6490ebd3f91309b5a58ca17f629baab6e625"
+  integrity sha512-4DVrX6eTCLqt+GVtSNAEcL3S9ODUvtcPrzUL1ObjSL507D+i+HE4tCokSxUn4PqLtEsrWxXJU+CVC43XmwIVyw==
+
 react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.5.tgz"

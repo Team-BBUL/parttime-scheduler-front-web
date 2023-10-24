@@ -39,8 +39,8 @@ function Navbarcr() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/schedule">Schedule</Nav.Link>
-            <Nav.Link href="/employee">Employee</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+            {/* <Nav.Link href="/employee">Employee</Nav.Link> */}
+            {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
@@ -50,7 +50,7 @@ function Navbarcr() {
               <NavDropdown.Item href="#action/3.4">
                 Separated link
               </NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
           <Nav>
             {/* 로그인 상태에 따라 다른 텍스트를 표시합니다. */}

@@ -22,3 +22,17 @@ thead th {
 tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
+/* div {
+  display: flex;
+  width: 50px;
+  border-radius: 20px;
+  height: 40px;
+  flex-wrap: wrap;
+  padding: 5px 10px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  color: #fff;
+  cursor: pointer;
+} */

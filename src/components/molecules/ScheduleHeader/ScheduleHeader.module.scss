@@ -5,14 +5,31 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  
+  color: black;
   > button {
     margin: 0 10px;
     
     &:last-child {
       position: absolute;
-      top: calc(50px / 4);
+      top: calc(50px / 6);
       right: 20px;
     }
   }
+}
+
+// CSS 모듈 사용을 위한 스타일 파일 (예: SaveButton.module.css)
+.save-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3498db; /* 배경색 */
+  color: #fff; /* 글자색 */
+  border: none;
+  border-radius: 5px; /* 둥근 모서리 */
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* 마우스 오버 시 배경색 변화 효과 */
+}
+
+.save-button:hover {
+  background-color: #217dbb; /* 마우스 오버 시 배경색 변경 */
 }

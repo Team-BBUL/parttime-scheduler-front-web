@@ -33,6 +33,7 @@
       .schedule__work {
         display: flex;
         height: 42px;
+        // width: 100px;
         margin-bottom: 3px;
         // height: calc(100% - 45px );\
         background-color: #EFEFEF;
@@ -40,6 +41,7 @@
         > div {
           width: 100%;
           color: white;
+          font-size: 100%;
         }
       }
 
@@ -55,7 +57,38 @@
     }
   }
 }
-
+.mains{
+  background-color: gray !important;
+}
 #droppable {
   background-color: transparent;
+}
+.selectable-selectbox {
+  z-index: 9000;
+  position: absolute;
+  cursor: default;
+  background: none;
+  border: 1px dashed grey;
+}
+
+        /* 스타일을 추가합니다. */
+        .save-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db; /* 배경색 */
+            color: #fff; /* 글자색 */
+            border: none;
+            border-radius: 5px; /* 둥근 모서리 */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* 마우스 오버 시 배경색 변화 효과 */
+        }
+
+        .save-button:hover {
+            background-color: #217dbb; /* 마우스 오버 시 배경색 변경 */
+        }
+
+
+ul{
+  overflow: hidden;
 }

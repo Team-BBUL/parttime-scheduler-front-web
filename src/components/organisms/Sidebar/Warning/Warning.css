@@ -2,9 +2,8 @@
     width: 300px;
     padding: 20px;
     margin: 20px;
-    border: 1px solid #ccc;
     transition: transform 0.3s ease-in-out;
-    color: red; /* 글자 색상을 빨간색으로 설정 */
+    color: black; /* 글자 색상을 빨간색으로 설정 */
   }
   
   .sidebar.fixed {

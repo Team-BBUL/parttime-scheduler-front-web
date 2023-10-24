@@ -6,6 +6,8 @@
   justify-content: flex-start;
   align-items: center;
   overflow-x: auto;
+  margin-right: 10px;
+  flex: 7;
 
   > div {
     display: flex;
@@ -18,6 +20,8 @@
     align-items: center;
     margin-right: 20px;
     color: #fff;
+    text-align: center;
+    display: 'inline-block';
     cursor: pointer;
     
     > span {

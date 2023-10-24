@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Label } from "../../atoms";
 import styles from "./ScheduleHeader.module.scss";
 
-const ScheduleHeader = ({ startDate, endDate, changeDateFromCurrentDate }) => {
+const ScheduleHeader = ({ startDate, endDate, changeDateFromCurrentDate, handleAiMake }) => {
 	const beforeSevenDaysFromCurrentDate = () => {
 		changeDateFromCurrentDate(-7);
 	};
@@ -10,7 +10,6 @@ const ScheduleHeader = ({ startDate, endDate, changeDateFromCurrentDate }) => {
 	const afterSevenDaysFromCurrentDate = () => {
 		changeDateFromCurrentDate(7);
 	};
-
 	return (
 		<div className={styles.schedule__header}>
 			<Button img={"ARROWLEFT"} onClickEvent={beforeSevenDaysFromCurrentDate} />
@@ -21,7 +20,7 @@ const ScheduleHeader = ({ startDate, endDate, changeDateFromCurrentDate }) => {
 			/>
 			<Button img={"ARROWRIGHT"} onClickEvent={afterSevenDaysFromCurrentDate} />
 
-			<Button img={"WRITE"} />
+			<Button img={"WRITE"} onClickEvent={handleAiMake}/>
 		</div>
 	);
 };

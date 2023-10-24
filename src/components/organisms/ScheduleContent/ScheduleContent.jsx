@@ -7,11 +7,14 @@ import { ScheduleEmployeeArray } from "../../../pages/api/ScheduleEmployeeArray"
 import { getDateArray } from "../../../pages/api/getDayArray";
 import { ScheduleTimeDataArray } from "../../../pages/api/ScheduleTimeDataArray";
 import { deleteSchedule } from "../../../pages/api/schedule/scheduleAPI";
+import { SelectableGroup } from "react-selectable-fast";
+import Box from "./Box";
 
-const ScheduleContent = ({ startDate, endDate, dateArray }) => {
+const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => {
 	
 	const [userList, setUserList] = useState([]); //api 연결해서 데이터 넣어서 state로 관리.
-	
+
+	const [timeStamp, setTimeStamp] = useState(new Date().toISOString().split('.')[0]);
 	useEffect(() => {
 		const token = localStorage.getItem('jwtToken');
 		const axiosConfig = {
@@ -23,49 +26,44 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 		axios.get(`/api/employees/${storeId}`, axiosConfig)
 		  .then((response) => {
 			const employeesArray = response.data.data;
-			console.log(response.data.data);
+			// console.log(response.data.data);
 
 			// role이 MANAGER인 애들 제외
 			const filteredUserList = employeesArray.filter((employee) => employee.role !== "MANAGER");
 
 			// date 배열을 scheduleList 상태에 저장
 			setUserList(filteredUserList);
-			console.log(userList);
+			console.log(startDate);
 		  })
 		  .catch((error) => {
 			console.error('API 요청 에러:', error);
 		  });
 	  }, []);
-	console.log(userList);
+	// console.log(userList);
 	const [isDraggingOver, setIsDraggingOver] = useState(false);
 
 	const dragFunction = (event, type) => {
 		event.preventDefault();
 		event.stopPropagation();
-		console.log(type);
+		// console.log(type);
 	};
-	const handleDrop = (event) => {
-		event.preventDefault();
-		setIsDraggingOver(false);
-		event.target.style.background = "#C275FF";
-		const droppedData = event.dataTransfer.getData("data");
-	};
+	
 	const handleDragOver = (event) => {
 		event.preventDefault();
 		setIsDraggingOver(false);
-		event.target.style.backgroundColor = "gray";
+		// event.target.style.backgroundColor = "gray";
 		const droppedData = event.dataTransfer.getData("data");
 	};
 	const handleDragLeave = (event) => {
 		event.preventDefault();
 		setIsDraggingOver(false);
-		event.target.style.backgroundColor = "#EFEFEF";
+		// event.target.style.backgroundColor = "#EFEFEF";
 		const droppedData = event.dataTransfer.getData("data");
 	};
 
 	const deleteScheduleClickEvent = (workerId) => {
-		if (window.confirm("정말로 스케줄을 삭제하시겠습니까?")) {
-			deleteSchedule(workerId).then((response) => console.log(response));
+		if (window.confirm("현재 스케줄을 저장하시겠습니까?")) {
+			// deleteSchedule(workerId).then((response) => console.log(response));
 		}
 	};
 
@@ -101,6 +99,8 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 	// 	(current) => current.day === fullDayArray[3]
 	// ).forEach((current) => (sum += current.workers.length));
 
+
+	//DB에 있는 색상코드 -> css 색상코드 변환
 	const getWorkerColor = (workerId) => {
 		const worker = userList.find((emp) => emp.id === workerId);
 		if (worker) {
@@ -128,7 +128,201 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 
 	const [scheduleList, setScheduleList] = useState([]);
 	useEffect(() => {
+		if(aiMakedSchedule.length!==0){
+			console.log("자동편성 완료");
+			console.log(aiMakedSchedule);
+			setScheduleList(aiMakedSchedule);
+		} else {
+		setScheduleList([]);
+		const token = localStorage.getItem('jwtToken');
+		const axiosConfig = {
+			headers: {
+			  'Authorization': `${token}`, 
+			},
+		};
+		const year = startDate.getFullYear();
+		const month = startDate.getMonth() + 1;
+		const day = startDate.getDate();		
+		const storeId = localStorage.getItem('storeId');
+		const roleId = localStorage.getItem('roleId');
+		const version = '2023-06-11T22:03:58';
 
+
+		
+			axios.get(`/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+			.then((response) => {
+				
+				if (response.status_code === 204) {
+					// 상태 코드가 204인 경우 에러를 발생시킴
+					throw new Error('No content found');
+				}
+				
+				// 응답에서 date 배열 추출  
+				const dateArray = response.data.date;
+				console.log(response.data.date);
+				// date 배열을 scheduleList 상태에 저장
+				setScheduleList(dateArray);
+				// console.log(scheduleList);
+				// console.log(scheduleList.length);
+				// console.log(scheduleList);
+			})
+			.catch((error) => {
+				console.error('API 요청 에러:', error);
+			});
+		}
+	  }, [dateArray, aiMakedSchedule]);
+
+	  const [isSelectionMode, setIsSelectionMode] = useState(false);
+	  const handleSelecting = (items) => {
+		console.log("selecting:", items);
+	  };
+	  const toggleSelectionMode = () => {
+		setIsSelectionMode(!isSelectionMode);
+	  };
+
+	  const checkForError = (scheduleList, formattedDate, workerId) => {
+		for (const schedule of scheduleList) {
+		  if (schedule.day == formattedDate && schedule.workers[0].id == workerId) {
+			console.log(schedule.day);
+			throw new Error("이미 해당 날짜에 근무중입니다.");
+		  }
+		}
+	  };
+
+	  const handleDrop = (event) => {
+
+		const workerId = JSON.parse(event.dataTransfer.getData('text/plain'));
+
+
+		const worker = userList.find((emp) => emp.id == workerId);
+		const hourIndex = event.currentTarget.getAttribute("id");
+		const date = event.currentTarget.parentElement.className;
+		// 날짜 문자열을 파싱
+		const parts = date.split(' ')[0].split('-');
+		const year = parts[0];
+		const month = parts[1];
+		const day = parts[2];
+
+		// 두 자릿수로 만든 날짜 문자열 생성
+		const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;		
+		try {
+			const newTime = Array(14).fill(false);
+			newTime[hourIndex] = true;
+			const newSchedule = {
+				id: 1, // 새로운 ID로 설정
+				day: formattedDate.trim(), 
+				time: newTime,
+				workers: [{ id: worker.id, alias: worker.alias, color: worker.color, cost: worker.cost }]
+			};
+			if(scheduleList){
+			// 오류 발생 여부 확인
+			checkForError(scheduleList, formattedDate, workerId);
+			// 여기에서 오류가 발생하지 않았을 때 실행할 코드
+			console.log("오류가 발생하지 않았습니다.");			
+			// 새로운 scheduleList 생성
+			const newScheduleList = [...scheduleList, newSchedule];
+
+			// date 기준으로 정렬
+			const sortedScheduleList = newScheduleList.sort((a, b) => {
+				const dateA = new Date(a.day);
+				const dateB = new Date(b.day);
+			
+				return dateA - dateB;
+			});
+			// scheduleList 업데이트
+			setScheduleList(sortedScheduleList);
+			} else {
+				const newScheduleList = [newSchedule];
+				setScheduleList(newScheduleList);
+			}
+			
+			
+			console.log(scheduleList);
+		  } catch (error) {
+			// 오류가 발생했을 때 실행할 코드
+			console.error(error.message);
+		  }
+	};	  
+	// 
+	// useEffect(() => {
+	// 	const token = localStorage.getItem('jwtToken');
+	// 	const axiosConfig = {
+	// 		headers: {
+	// 		  'Authorization': `${token}`, 
+	// 		},
+	// 	};
+	// 	const year = startDate.getFullYear();
+	// 	const month = startDate.getMonth() + 1;
+	// 	const day = startDate.getDate();		
+	// 	const storeId = localStorage.getItem('storeId');
+	// 	const roleId = localStorage.getItem('roleId');
+	// 	const version = '2023-06-11T22:03:58';
+
+
+		
+	// 		axios.get(`/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+	// 		.then((response) => {
+				
+	// 			if (response.status === 204) {
+	// 				// 상태 코드가 204인 경우 에러를 발생시킴
+	// 				throw new Error('No content found');
+	// 			}
+				
+	// 			// 응답에서 date 배열 추출  
+	// 			const dateArray = response.data.date;
+	// 			console.log(response.data.date);
+	// 			// date 배열을 scheduleList 상태에 저장
+	// 			setScheduleList(dateArray);
+	// 			// console.log(scheduleList);
+	// 			// console.log(scheduleList.length);
+	// 			// console.log(scheduleList);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error('API 요청 에러:', error);
+	// 		});
+	//   }, [dateArray]);
+	
+	useEffect(()=>{
+		setTimeStamp(new Date().toISOString().split('.')[0]);
+		if(scheduleList){
+		const tempSchedule = JSON.parse(JSON.stringify(scheduleList));
+		console.log(tempSchedule);
+		tempSchedule.map((schedule)=>{
+			if(schedule.id){
+				delete schedule.id;
+			}
+			// console.log(schedule.workers[0]);
+			const workerId = schedule.workers[0].id;
+			if(schedule.workers[0].id){
+			delete schedule.workers[0].id;
+			}
+			// delete schedule.workers[0].alias;
+			// delete schedule.workers[0].color;
+			// delete schedule.workers[0].cost;
+			schedule.workers = [workerId];
+		});
+		console.log("1111111:   ");
+		console.log(tempSchedule);
+		console.log(scheduleList);
+		const postData={
+			timeStamp: timeStamp,
+			data: tempSchedule
+		};
+	}
+	}, [scheduleList]);
+	
+	// const tempScheduleList = scheduleList.map((schedule)=>{
+	// 	const temp = delete schedule.id;
+		
+	// })
+	// const formattedScheduleList = tempSchedule.map((schedule)=>{
+		
+	// });
+	// const postData = {
+	// 	timeStamp: timeStamp,
+	// 	data: formattedScheduleList
+	// };
+	const handleSave=()=>{
 		const token = localStorage.getItem('jwtToken');
 		const axiosConfig = {
 			headers: {
@@ -136,43 +330,83 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 			},
 		};
 		const storeId = localStorage.getItem('storeId');
-		const roleId = localStorage.getItem('roleId');
-		const version = '2023-06-11T22:03:58';
-		const year = startDate.getFullYear();
-		const month = startDate.getMonth() + 1;
-		const day = startDate.getDate();
-		axios.get(`/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+		axios.post(`/api/schedule/${storeId}`, axiosConfig)
 		  .then((response) => {
-			// 응답에서 date 배열 추출
-			const dateArray = response.data.date;
-			
-			// date 배열을 scheduleList 상태에 저장
-			setScheduleList(dateArray);
+			const employeesArray = response.data.data;
+			console.log("등록성공");
 		  })
 		  .catch((error) => {
 			console.error('API 요청 에러:', error);
 		  });
-	  }, []);
-
+	}
+	
 	return (
 		<div className={styles.schedule__content} style={{ display: "flex" }}>
 			<ScheduleTimeLayout timeArray={timeArray} />
 			<div style={{ flex: 3 }}>
 				<ul className={styles.schedule__day}>
 					{dayArray.map((currentDay, dayIndex) => (
-						<li key={dayIndex}>
+						<li 
+							key={dayIndex}
+							// style={{display: 'flex'}}
+						>
+							<div></div>
 							<p style={{textAlign: 'center'}}>{`${currentDay.day}일`}</p>
-							{timeArray.map((currentHour, hourIndex) => {
-								//
-								const workersForThisTimeSlot = scheduleList.filter(
-									(schedule) =>
-										schedule.day ===
-											`${currentDay.year}-${convertFormattedDate(
-												currentDay.month
-											)}-${convertFormattedDate(currentDay.day)}` &&
-										schedule.time[hourIndex]
-								);
+							<div className="scheduleList" style={{display: 'flex'}}>
 
+							
+							<SelectableGroup 
+								className={`${currentDay.year}-${currentDay.month}-${currentDay.day}`}
+								clickClassName="tick"
+								enableDeselect
+								tolerance={0}
+								globalMouse={false}
+								allowClickWithoutSelected={false}
+								style={{width: '100%'}}
+								onSelectionFinish={(items)=>{
+									console.log(items);
+									
+									
+									const date =`${currentDay.year}-${currentDay.month}-${currentDay.day}`;
+									const parts = date.split('-');
+									const year = parts[0];
+									const month = parts[1];
+									const day = parts[2];
+									
+									// 두 자릿수로 만든 날짜 문자열 생성
+									const tempDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;									
+									const formattedDate = tempDate.trim();
+									scheduleList.map((schedule)=>{
+										if(schedule.day === formattedDate){
+											schedule.time.fill(false);
+											console.log(schedule);
+										}
+									})
+									items.map((item)=>{
+										const workerId = item.props.id;
+										console.log(item._reactInternals.key-workerId*20);
+										const hourIndex = item._reactInternals.key-workerId*20;
+										const foundSchedule = scheduleList.find((schedule) => schedule.day === formattedDate  && schedule.workers[0].id === workerId);
+										foundSchedule.time[hourIndex]=true;
+										// console.log(foundSchedule);
+										// console.log(hourIndex);
+									})				
+									setTimeStamp(new Date().toISOString().split('.')[0]);
+
+								}}
+							>
+							{timeArray.map((currentHour, hourIndex) => {
+								let workersForThisTimeSlot = []; 
+								if(scheduleList){
+									
+									workersForThisTimeSlot = scheduleList.filter(
+										(schedule) =>
+											schedule.day ===
+												`${currentDay.year}-${convertFormattedDate(
+													currentDay.month
+												)}-${convertFormattedDate(currentDay.day)}`
+									);
+								}
 								return (
 									<div
 										className={styles.schedule__work}
@@ -180,42 +414,89 @@ const ScheduleContent = ({ startDate, endDate, dateArray }) => {
 										onDragOver={handleDragOver}
 										onDragEnter={(event) => dragFunction(event, "enter")}
 										onDragLeave={handleDragLeave}
+										id={hourIndex}
 										key={hourIndex}
+										// style={!workersForThisTimeSlot.length ? { width: '90px' } : { width: '100%' }}
 									>
-										{workersForThisTimeSlot.map((workerSchedule) =>
-											workerSchedule.workers.map((worker) => (
+										{workersForThisTimeSlot.map((workerSchedule) =>{
+											const worker = workerSchedule.workers[0];
+											if(worker){
+												if(workerSchedule.time[hourIndex]){
+													return (
+														<Box 
+														padding={2}
+														margin={1}
+														cursor={"pointer"}
+														borderRadius={5}
+														backgroundColor={getWorkerColor(worker.id)}
+														background={"#EFEFEF"}
+														isSelected={true}
+														id={worker.id}
+														key={worker.id*20+hourIndex}
+														
+													>
+														 {getWorkerName(worker.id)} 
+														</Box>
+														// // 각 1시간 단위 div태그 
+														// <div
+														// 	key={worker.id}
+														// 	style={{
+														// 		backgroundColor: getWorkerColor(worker.id),
+														// 		padding: "2px",
+														// 		margin: "1px",
+														// 		cursor: "pointer",
+														// 		borderRadius: '5px',
+														// 	}}
+														// 	onClick={() => deleteScheduleClickEvent(worker.id)}
+														// >
+														// 	{getWorkerName(worker.id)} 
+														// </div>													
+													)
+												} else {
+													return(
+													<Box 
+													padding={2}
+													margin={1}
+													cursor={"pointer"}
+													borderRadius={5}
+													backgroundColor={getWorkerColor(worker.id)}
+													background={"#EFEFEF"}
+													isSelected={false}
+													isSelecting={false}
+													id={worker.id}
+													key={worker.id*20+hourIndex}
+													>
+													 {getWorkerName(worker.id)} 
+													</Box>
+													)													
+												}
 
-												// 각 1시간 단위 div태그 
-												<div
-													key={worker.id}
-													style={{
-														backgroundColor: getWorkerColor(worker.id),
-														padding: "2px",
-														margin: "1px",
-														cursor: "pointer",
-														borderRadius: '5px',
-													}}
-													onClick={() => deleteScheduleClickEvent(worker.id)}
-												>
-													{getWorkerName(worker.id)} 
-												</div>
-											))
+											}
+										}
 										)}
 									</div>
 								);
 							})}
+							</SelectableGroup>
+							</div>
 						</li>
 					))}
+					
 				</ul>
 			</div>
 			<div style={{ flex: 1 }}>
 				<div className="sidebar">
 					{/* <Warning /> */}
-					<WorkingTime userList={userList} scheduleList={scheduleList}/>
+					<WorkingTime userList={userList} scheduleList={scheduleList} timeStamp={timeStamp}/>
 				</div>
 			</div>
+			<div style={{display: "flex"}}>
+			<ScheduleEmployee userList={userList}  />
+			{/* <button className="save-button" style={{flex: 1, fontsize: '20medium'}} onClick={() => deleteScheduleClickEvent(123)}>
+      		저장
+    		</button> */}
+			</div>
 
-			<ScheduleEmployee userList={userList} />
 		</div>
 	);
 };
