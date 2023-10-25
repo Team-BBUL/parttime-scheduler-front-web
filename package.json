@@ -43,5 +43,5 @@
   "devDependencies": {
     "web-vitals": "^3.3.2"
   },
-  "proxy": "https://sidam-scheduler.link"
+  "proxy": "http://3.35.147.177:8080"
 }

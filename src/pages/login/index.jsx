@@ -14,7 +14,7 @@ const LoginPage = () => {
 	  if (token) {
 		navigate('/schedule');
 	  }
-	}, []);
+	});
 
 	const [loginFormData, setLoginFormData] = useState({
 		accountId: '',
