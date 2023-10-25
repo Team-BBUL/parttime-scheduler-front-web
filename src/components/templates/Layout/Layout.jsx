@@ -1,7 +1,5 @@
 import React from "react";
 import {
-	Footer,
-	Header,
 	Navbarcr,
 
 } from "../../organisms";

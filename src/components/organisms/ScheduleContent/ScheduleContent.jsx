@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { ScheduleEmployee, ScheduleTimeLayout } from "../../molecules";
 import styles from "./ScheduleContent.module.scss";
-import { Warning, WorkingTime } from "../index";
-import { ScheduleEmployeeArray } from "../../../pages/api/ScheduleEmployeeArray";
+import {  WorkingTime } from "../index";
+// import { ScheduleEmployeeArray } from "../../../pages/api/ScheduleEmployeeArray";
 import { getDateArray } from "../../../pages/api/getDayArray";
-import { ScheduleTimeDataArray } from "../../../pages/api/ScheduleTimeDataArray";
-import { deleteSchedule } from "../../../pages/api/schedule/scheduleAPI";
+// import { ScheduleTimeDataArray } from "../../../pages/api/ScheduleTimeDataArray";
+// import { deleteSchedule } from "../../../pages/api/schedule/scheduleAPI";
 import { SelectableGroup } from "react-selectable-fast";
 import Box from "./Box";
 

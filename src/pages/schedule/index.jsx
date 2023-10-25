@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { ScheduleHeader, ScheduleTimeLayout } from "../../components/molecules";
+import { ScheduleHeader } from "../../components/molecules";
 import {
 	ScheduleContent,
-	Warning,
-	WorkingTime,
+
 } from "../../components/organisms";
 import { getMondayOfTheWeek } from "../api/getDayArray";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+// import LoadingModal from '../../components/molecules/LoadingModal/LoadingModal'
 
 const SchedulePage = () => {
 	const navigate = useNavigate();
@@ -18,7 +18,7 @@ const SchedulePage = () => {
 		if (!token) {
 		  navigate('/login');
 		}
-	  }, []);
+	  });
 	
 	// 헤더파일에 토큰 추가
 	const token = localStorage.getItem('jwtToken');
@@ -133,9 +133,13 @@ const SchedulePage = () => {
 			});
 		}
 	}, [aiMake]);
-
+	const [isLoading, setLoading] = useState(false);
 	const handleAiMake= () =>{
 		setAiMake(true);
+		setLoading(true);
+		setTimeout(() => {
+			setLoading(false);
+		  }, 500); // 0.5초 후에 로딩 상태를 false로 변경
 		setAiScheduleList([]);
 	};
 
@@ -148,7 +152,7 @@ const SchedulePage = () => {
 				handleAiMake={handleAiMake}
 			/>
 			<div className="schedule__divide__line"></div>
-
+			{/* {isLoading && <LoadingModal />} */}
 			<ScheduleContent
 				startDate={startDate}
 				endDate={endDate}
