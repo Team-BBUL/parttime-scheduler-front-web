@@ -35,7 +35,7 @@ const LoginPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post('https://sidam-scheduler.link/api/auth/login', loginFormData);
+			const response = await axios.post('/api/auth/login', loginFormData);
 			const token = response.headers.authorization;
 			if(token){
 			localStorage.setItem('jwtToken', token); //로컬스토리지 jwt 저장
