@@ -38,8 +38,8 @@ const LoginPage = () => {
 		try {
 			const response = await axios.post(`${serverURL}/api/auth/login`, loginFormData, { withCredentials: true })
 			.then(response=>{
-				const token = response.headers.Authorization;
-				localStorage.setItem('jwtToken', response.headers.Authorization); //로컬스토리지 jwt 저장
+				const token = response.headers.authorization;
+				localStorage.setItem('jwtToken', response.headers.authorization); //로컬스토리지 jwt 저장
 				localStorage.setItem('storeId', response.data.store);
 				localStorage.setItem('roleId', response.data.user.id);
 				console.log('응답:', response);
@@ -49,7 +49,7 @@ const LoginPage = () => {
 				} else {
 					console.log("else");
 				}
-				console.log('토큰:', response.headers.Authorization);
+				console.log('토큰:', response.headers.authorization);
 				console.log('로그인 성공:', response.data);
 				console.log(token);
 				// if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
