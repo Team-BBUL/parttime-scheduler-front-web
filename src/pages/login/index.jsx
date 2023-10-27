@@ -44,6 +44,11 @@ const LoginPage = () => {
 				localStorage.setItem('roleId', response.data.user.id);
 				console.log('응답:', response);
 				console.log('헤더:', response.headers);
+				if(token){
+					console.log("if(token)");
+				} else {
+					console.log("else");
+				}
 				console.log('토큰:', response.headers.Authorization);
 				console.log('로그인 성공:', response.data);
 				console.log(token);
