@@ -148,7 +148,7 @@ const RegistStorePage = () => {
 			},
 		};  
 		try {
-		  const response = await axios.post('/store/regist', storeFormData, axiosConfig);
+		  const response = await axios.post(`${serverURL}/store/regist`, storeFormData, axiosConfig);
 		  console.log('매장등록 성공:', response.data);
 		  window.location.href = '/schedule';
 		} catch (error) {
