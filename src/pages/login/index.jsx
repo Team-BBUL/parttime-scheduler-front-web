@@ -42,6 +42,7 @@ const LoginPage = () => {
 				localStorage.setItem('jwtToken', response.headers.Authorization); //로컬스토리지 jwt 저장
 				localStorage.setItem('storeId', response.data.store);
 				localStorage.setItem('roleId', response.data.user.id);
+				console.log('헤더:', response.headers);
 				console.log('토큰:', response.headers.Authorization);
 				console.log('로그인 성공:', response.data);
 				console.log(token);
