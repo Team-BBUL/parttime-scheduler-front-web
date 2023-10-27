@@ -39,9 +39,10 @@ const LoginPage = () => {
 			const response = await axios.post(`${serverURL}/api/auth/login`, loginFormData, { withCredentials: true })
 			.then(response=>{
 				const token = response.headers.Authorization;
-				localStorage.setItem('jwtToken', token); //로컬스토리지 jwt 저장
+				localStorage.setItem('jwtToken', response.headers.Authorization); //로컬스토리지 jwt 저장
 				localStorage.setItem('storeId', response.data.store);
 				localStorage.setItem('roleId', response.data.user.id);
+				console.log('토큰:', response.headers.Authorization);
 				console.log('로그인 성공:', response.data);
 				console.log(token);
 				// if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
