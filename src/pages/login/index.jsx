@@ -38,7 +38,7 @@ const LoginPage = () => {
 		try {
 			const response = await axios.post(`${serverURL}/api/auth/login`, loginFormData, { withCredentials: true })
 			.then(response=>{
-				const token = response.headers.authorization;
+				const token = response.headers.Authorization;
 				localStorage.setItem('jwtToken', token); //로컬스토리지 jwt 저장
 				localStorage.setItem('storeId', response.data.store);
 				localStorage.setItem('roleId', response.data.user.id);
