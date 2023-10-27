@@ -429,7 +429,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 								allowClickWithoutSelected={false}
 								style={{width: '100%'}}
 								onSelectionFinish={(items)=>{
-									console.log(items);
+									// console.log(items);
 									
 									
 									const date =`${currentDay.year}-${currentDay.month}-${currentDay.day}`;
@@ -444,7 +444,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 									scheduleList.map((schedule)=>{
 										if(schedule.day === formattedDate){
 											schedule.time.fill(false);
-											console.log(schedule);
+											// console.log(schedule);
 										}
 									})
 									items.map((item)=>{
@@ -456,11 +456,12 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 											scheduleList[foundScheduleIdx].time[hourIndex] = true;
 										}
 										const allFalse = scheduleList[foundScheduleIdx].time.every(timeValue => timeValue === false);
+										console.log("allFalse : ", allFalse);
 										if(allFalse){
 											scheduleList.splice(foundScheduleIdx, 1);
 										}
-										console.log(foundScheduleIdx);
-										console.log(scheduleList[foundScheduleIdx]);
+										console.log("foundScheduleIdx : ",foundScheduleIdx);
+										console.log("scheduleList[foundScheduleIdx] : ",scheduleList[foundScheduleIdx]);
 										// console.log(hourIndex);
 									})	
 									setChanged(new Date());
