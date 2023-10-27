@@ -44,17 +44,17 @@ const LoginPage = () => {
 				localStorage.setItem('roleId', response.data.user.id);
 				console.log('로그인 성공:', response.data);
 				console.log(token);
-				if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
-					window.location.href = '/accountdetails';
-				} else {
-					if(response.data.user.alias === null){
-						window.location.href = '/accountdetails';
-					} else if(response.data.store === null) {
-						window.location.href = '/registstore';
-					} else {
-						window.location.href = '/schedule';
-					}
-				}
+				// if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
+				// 	window.location.href = '/accountdetails';
+				// } else {
+				// 	if(response.data.user.alias === null){
+				// 		window.location.href = '/accountdetails';
+				// 	} else if(response.data.store === null) {
+				// 		window.location.href = '/registstore';
+				// 	} else {
+				// 		window.location.href = '/schedule';
+				// 	}
+				// }
 			});
 		} catch (error) {
 		  console.error('로그인 실패:', error);
