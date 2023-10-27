@@ -1,0 +1,52 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경의 투명도 조정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 다른 요소보다 위로 올라오도록 설정 */
+}
+
+.modals {
+  width: 400px;
+  
+  background-color: white;
+  border-radius: 15px;
+  display: flex;
+  padding:2px;
+  flex-direction: column;
+}
+
+.modal-header{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  margin: 5px;
+}
+
+.modal-header button{
+  position: absolute;
+  top: 0;
+  right:10px;
+  background-color: white;
+  border: none;
+  font-size: 20px;
+}
+
+.modal-header button:hover{
+  cursor: pointer;
+}
+
+.modal-body{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+ 
+}

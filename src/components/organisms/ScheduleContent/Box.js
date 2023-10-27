@@ -12,7 +12,12 @@ function Box(props) {
     margin: `${props.margin}px`,
     cursor: props.cursor,
     borderRadius: `${props.borderRadius}px`,
-    textAlign: 'center',
+    
+    fontSize: '13px',
+    lineHeight: props.height,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   };
   return (
     <div

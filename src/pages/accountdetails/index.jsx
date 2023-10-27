@@ -4,6 +4,7 @@ import "./index.css";
 import { useNavigate } from 'react-router-dom';
 
 const AccountDetailsPage = () => {
+	const serverURL = "https://sidam-scheduler.link";
 	const [detailsFormData, setDetailsFormData] = useState({
 		alias: '',      
 		level: 0,              
@@ -48,7 +49,7 @@ const AccountDetailsPage = () => {
 
 		// api요청
 		try {
-			const response = await axios.put('/api/auth/account/details', detailsFormData, axiosConfig);
+			const response = await axios.put(`${serverURL}/api/auth/account/details`, detailsFormData, axiosConfig);
 			console.log('alias 저장 성공:', response.data);
 			// 상세정보 저장 후 매장등록으로 이동
 			navigate('/registstore');

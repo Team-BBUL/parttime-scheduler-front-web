@@ -4,7 +4,7 @@ import "./index.css";
 import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
-
+	const serverURL = "https://sidam-scheduler.link";
 	const [registerFormData, setRegisterFormData] = useState({
 		accountId: '',
 		password: '',
@@ -77,7 +77,7 @@ const SignUpPage = () => {
 			setPasswordMismatch(''); // 비밀번호 일치하면 메시지 감춤
 		  }	
 		try {
-		  const response = await axios.post('/api/auth/signup', registerFormData);
+		  const response = await axios.post(`${serverURL}/api/auth/signup`, registerFormData);
 		  console.log('회원가입 성공:', response.data);
 		  navigate('/login?signupSuccess=true');
 		} catch (error) {

@@ -4,6 +4,7 @@ import "./index.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const LoginPage = () => {
+	const serverURL = "https://sidam-scheduler.link";
 	//회원가입 후 로그인페이지로 이동했을 때 문구출력을 위한 데이터
 	const location = useLocation();
 	const params = new URLSearchParams(location.search);
@@ -35,7 +36,7 @@ const LoginPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post('https://sidam-scheduler.link/api/auth/login', loginFormData, { withCredentials: true })
+			const response = await axios.post('/api/auth/login', loginFormData, { withCredentials: true })
 			.then(response=>{
 				const token = response.headers.authorization;
 				localStorage.setItem('jwtToken', token); //로컬스토리지 jwt 저장
@@ -43,19 +44,18 @@ const LoginPage = () => {
 				localStorage.setItem('roleId', response.data.user.id);
 				console.log('로그인 성공:', response.data);
 				console.log(token);
-			});
-			if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
-				window.location.href = '/accountdetails';
-			} else {
-				if(response.data.user.alias === null){
+				if(signupSuccess){ //회원가입 직후는 매장등록으로 바로 이동
 					window.location.href = '/accountdetails';
-				} else if(response.data.store === null) {
-					window.location.href = '/registstore';
 				} else {
-					window.location.href = '/schedule';
+					if(response.data.user.alias === null){
+						window.location.href = '/accountdetails';
+					} else if(response.data.store === null) {
+						window.location.href = '/registstore';
+					} else {
+						window.location.href = '/schedule';
+					}
 				}
-			}
-		  
+			});
 		} catch (error) {
 		  console.error('로그인 실패:', error);
 		  if (error.response && error.response.status === 400) {

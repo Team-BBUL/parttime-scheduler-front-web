@@ -7,9 +7,11 @@ import {
 import { getMondayOfTheWeek } from "../api/getDayArray";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AIMakedModal from "../../components/molecules/AIMakedModal/AIMakedModal";
 // import LoadingModal from '../../components/molecules/LoadingModal/LoadingModal'
 
 const SchedulePage = () => {
+	const serverURL = "https://sidam-scheduler.link";
 	const navigate = useNavigate();
 
 	// JWT토큰이 발행된 것이 없다면 로그인 페이지로 이동 
@@ -31,7 +33,7 @@ const SchedulePage = () => {
 	// 매장이 등록되어 있는 것이 없으면 매장등록으로 이동 
   	useEffect(() => {
 		// API 요청 보내기
-		axios.get('/store/my-list?role=MANAGER',  axiosConfig)
+		axios.get(`${serverURL}/store/my-list?role=MANAGER`,  axiosConfig)
 		.then((response) => {
 
 			if(!response.data.data){
@@ -79,13 +81,13 @@ const SchedulePage = () => {
 	}, [date]);
 	
 	const changeDateFromCurrentDate = (changeDay) => {
-		setAiMake(false);
-		setAiScheduleList([]);
+		// setAiMake(false);
+		// setAiScheduleList([]);
 		const newDate = new Date(date);
 		newDate.setDate(newDate.getDate() + changeDay);
 		setDate(newDate);
-		setAiMake(false);
-		setAiScheduleList([]);
+		// setAiMake(false);
+		// setAiScheduleList([]);
 	};
 
 	const changeDate = (changeDay) => {
@@ -113,7 +115,7 @@ const SchedulePage = () => {
 			const month = startDate.getMonth() + 1;
 			const day = startDate.getDate();		
 			const storeId = localStorage.getItem('storeId');
-			axios.get(`/api/schedule/make/${storeId}?year=${year}&month=${month}&day=${day}`, axiosConfig)
+			axios.get(`${serverURL}/api/schedule/make/${storeId}?year=${year}&month=${month}&day=${day}`, axiosConfig)
 			.then((response) => {
 				// 응답에서 date 배열 추출  
 				const dateArray = response.data.date;
@@ -127,8 +129,10 @@ const SchedulePage = () => {
 					schedule.day=formDay;
 				})
 				setAiScheduleList(dateArray);
+				openModal();
 			})
 			.catch((error) => {
+				openFailedModal();
 				console.error('API 요청 에러:', error);
 			});
 		}
@@ -141,8 +145,34 @@ const SchedulePage = () => {
 			setLoading(false);
 		  }, 500); // 0.5초 후에 로딩 상태를 false로 변경
 		setAiScheduleList([]);
-	};
 
+	};
+	const [showModal, setShowModal] = useState(false);
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+	useEffect(() => {
+		if (showModal) {
+		  openModal();
+		}
+	  }, [showModal]);
+	  const [showFailedModal, setShowFailedModal] = useState(false);
+	  const openFailedModal = () => {
+		  setShowFailedModal(true);
+	  };
+  
+	  const closeFailedModal = () => {
+		  setShowFailedModal(false);
+	  };
+	  useEffect(() => {
+		  if (showFailedModal) {
+			openFailedModal();
+		  }
+		}, [showFailedModal]);
 	return (
 		<section className="schedule">
 			<ScheduleHeader
@@ -152,7 +182,34 @@ const SchedulePage = () => {
 				handleAiMake={handleAiMake}
 			/>
 			<div className="schedule__divide__line"></div>
-			{/* {isLoading && <LoadingModal />} */}
+			{showModal &&(			
+			<AIMakedModal
+				closeModal={closeModal}
+				headerTitle={<div>
+					자동편성이 완료되었습니다.
+				</div>}
+
+			>
+			</AIMakedModal>)
+
+			}
+			{showFailedModal &&(			
+			<AIMakedModal
+				closeModal={closeFailedModal}
+				headerTitle={
+					<div>
+					<div>
+					자동편성을 실패했습니다.
+					</div>
+					<div>
+					지난 주차의 스케줄이 존재하는지 확인해주세요.
+					</div>
+					</div>
+				}
+			>
+			</AIMakedModal>)
+			}
+
 			<ScheduleContent
 				startDate={startDate}
 				endDate={endDate}

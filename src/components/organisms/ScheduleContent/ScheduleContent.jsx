@@ -9,11 +9,13 @@ import { getDateArray } from "../../../pages/api/getDayArray";
 // import { deleteSchedule } from "../../../pages/api/schedule/scheduleAPI";
 import { SelectableGroup } from "react-selectable-fast";
 import Box from "./Box";
+import SavedModal from "../../molecules/SavedModal/SavedModal";
 
 const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => {
-	
+	const serverURL = "https://sidam-scheduler.link";
+	const [changed, setChanged] = useState(new Date());
 	const [userList, setUserList] = useState([]); //api 연결해서 데이터 넣어서 state로 관리.
-
+	
 	const [timeStamp, setTimeStamp] = useState(new Date().toISOString().split('.')[0]);
 	useEffect(() => {
 		const token = localStorage.getItem('jwtToken');
@@ -23,7 +25,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 			},
 		};
 		const storeId = localStorage.getItem('storeId');
-		axios.get(`/api/employees/${storeId}`, axiosConfig)
+		axios.get(`${serverURL}/api/employees/${storeId}`, axiosConfig)
 		  .then((response) => {
 			const employeesArray = response.data.data;
 			// console.log(response.data.data);
@@ -61,7 +63,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		const droppedData = event.dataTransfer.getData("data");
 	};
 
-	const deleteScheduleClickEvent = (workerId) => {
+	const handleSaveSchedule = (workerId) => {
 		if (window.confirm("현재 스케줄을 저장하시겠습니까?")) {
 			// deleteSchedule(workerId).then((response) => console.log(response));
 		}
@@ -125,15 +127,15 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		}
 		return "";
 	};
-
+	const [currentVersion, setCurrentVersion] = useState();
 	const [scheduleList, setScheduleList] = useState([]);
 	useEffect(() => {
 		if(aiMakedSchedule.length!==0){
+			setScheduleList([]);
 			console.log("자동편성 완료");
 			console.log(aiMakedSchedule);
 			setScheduleList(aiMakedSchedule);
 		} else {
-		setScheduleList([]);
 		const token = localStorage.getItem('jwtToken');
 		const axiosConfig = {
 			headers: {
@@ -146,20 +148,23 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		const storeId = localStorage.getItem('storeId');
 		const roleId = localStorage.getItem('roleId');
 		const version = '2023-06-11T22:03:58';
-
+		setCurrentVersion();
 
 		
-			axios.get(`/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+			axios.get(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
 			.then((response) => {
 				
 				if (response.status_code === 204) {
+					console.log("204 found");
 					// 상태 코드가 204인 경우 에러를 발생시킴
 					throw new Error('No content found');
 				}
 				
 				// 응답에서 date 배열 추출  
 				const dateArray = response.data.date;
-				console.log(response.data.date);
+				setCurrentVersion(response.data.time_stamp);
+				console.log(currentVersion);
+				// console.log(response.data.date);
 				// date 배열을 scheduleList 상태에 저장
 				setScheduleList(dateArray);
 				// console.log(scheduleList);
@@ -282,6 +287,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 	// 		});
 	//   }, [dateArray]);
 	
+	const [postData, setPostData] = useState([]);
 	useEffect(()=>{
 		setTimeStamp(new Date().toISOString().split('.')[0]);
 		if(scheduleList){
@@ -304,12 +310,13 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		console.log("1111111:   ");
 		console.log(tempSchedule);
 		console.log(scheduleList);
-		const postData={
+		setPostData({
 			timeStamp: timeStamp,
 			data: tempSchedule
-		};
+		});
+		console.log(postData);
 	}
-	}, [scheduleList]);
+	}, [scheduleList, changed]);
 	
 	// const tempScheduleList = scheduleList.map((schedule)=>{
 	// 	const temp = delete schedule.id;
@@ -322,6 +329,29 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 	// 	timeStamp: timeStamp,
 	// 	data: formattedScheduleList
 	// };
+	const handleDelete=()=>{
+		const token = localStorage.getItem('jwtToken');
+		const axiosConfig = {
+			headers: {
+			  'Authorization': `${token}`, 
+			},
+		};
+		const year = startDate.getFullYear();
+		const month = startDate.getMonth() + 1;
+		const day = startDate.getDate();		
+		const roleId = localStorage.getItem('roleId');
+		const storeId = localStorage.getItem('storeId');
+		
+			try{
+				axios.delete(`/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+				.then((response) =>{
+					console.log("삭제성공");
+				});
+			} catch (error){
+				console.error('API 요청 에러:', error);
+			}
+	};
+	
 	const handleSave=()=>{
 		const token = localStorage.getItem('jwtToken');
 		const axiosConfig = {
@@ -329,18 +359,53 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 			  'Authorization': `${token}`, 
 			},
 		};
+		const year = startDate.getFullYear();
+		const month = startDate.getMonth() + 1;
+		const day = startDate.getDate();		
+		const roleId = localStorage.getItem('roleId');
 		const storeId = localStorage.getItem('storeId');
-		axios.post(`/api/schedule/${storeId}`, axiosConfig)
-		  .then((response) => {
-			const employeesArray = response.data.data;
-			console.log("등록성공");
-		  })
-		  .catch((error) => {
-			console.error('API 요청 에러:', error);
-		  });
-	}
+		if(currentVersion){
+			try{
+				axios.delete(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+				.then((response) =>{
+					console.log("삭제성공");
+					axios.post(`${serverURL}/api/schedule/${storeId}`, postData, axiosConfig)
+					.then((response) => {
+						console.log("등록성공");
+						openModal();
+					});
+				});
+			} catch (error){
+				console.error('API 요청 에러:', error);
+			}
+		} else {
+			try{
+				axios.post(`${serverURL}/api/schedule/${storeId}`, postData, axiosConfig)
+				.then((response) => {
+					console.log("등록성공");
+					openModal();
+				});
+			} catch (error){
+				console.error('API 요청 에러:', error);
+			}
+		}
+	};
+	const [showModal, setShowModal] = useState(false);
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+	useEffect(() => {
+		if (showModal) {
+		  openModal();
+		}
+	  }, [showModal]);
 	
 	return (
+		<div>
 		<div className={styles.schedule__content} style={{ display: "flex" }}>
 			<ScheduleTimeLayout timeArray={timeArray} />
 			<div style={{ flex: 3 }}>
@@ -384,13 +449,17 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 									})
 									items.map((item)=>{
 										const workerId = item.props.id;
-										console.log(item._reactInternals.key-workerId*20);
+										// console.log(item._reactInternals.key-workerId*20);
 										const hourIndex = item._reactInternals.key-workerId*20;
-										const foundSchedule = scheduleList.find((schedule) => schedule.day === formattedDate  && schedule.workers[0].id === workerId);
-										foundSchedule.time[hourIndex]=true;
-										// console.log(foundSchedule);
+										const foundScheduleIdx = scheduleList.findIndex((schedule) => schedule.day === formattedDate  && schedule.workers[0].id === workerId);
+										if(foundScheduleIdx !== -1){
+											scheduleList[foundScheduleIdx].time[hourIndex] = true;
+										}
+										console.log(foundScheduleIdx);
+										console.log(scheduleList[foundScheduleIdx]);
 										// console.log(hourIndex);
-									})				
+									})	
+									setChanged(new Date());
 									setTimeStamp(new Date().toISOString().split('.')[0]);
 
 								}}
@@ -488,15 +557,31 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				<div className="sidebar">
 					{/* <Warning /> */}
 					<WorkingTime userList={userList} scheduleList={scheduleList} timeStamp={timeStamp}/>
+
 				</div>
 			</div>
-			<div style={{display: "flex"}}>
-			<ScheduleEmployee userList={userList}  />
-			{/* <button className="save-button" style={{flex: 1, fontsize: '20medium'}} onClick={() => deleteScheduleClickEvent(123)}>
-      		저장
-    		</button> */}
-			</div>
 
+		</div>
+		<div style={{ display: "flex", textAlign: 'center' }}>
+			<ScheduleEmployee userList={userList}  />
+			<button className="save-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center'}} onClick={handleSave}>
+      		저장
+    		</button>
+		</div>
+		{showModal &&(			
+			<SavedModal
+				closeModal={closeModal}
+				headerTitle={<div>
+					저장이 완료되었습니다.
+				</div>}
+
+			>
+			</SavedModal>
+			)
+		}
+		<button className="save-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center', backgroundColor: 'white'}} onClick={handleDelete}>
+
+    	</button>
 		</div>
 	);
 };

@@ -4,6 +4,7 @@ import "./index.css";
 // import { useNavigate } from 'react-router-dom';asd
 
 const RegistStorePage = () => {
+	const serverURL = "https://sidam-scheduler.link";
 	const [storeFormData, setStoreFormData] = useState({
 		name: '',
 		location: '',
