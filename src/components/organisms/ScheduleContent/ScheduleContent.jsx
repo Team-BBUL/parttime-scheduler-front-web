@@ -457,7 +457,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 										}
 										const allFalse = scheduleList[foundScheduleIdx].time.every(timeValue => timeValue === false);
 										if(allFalse){
-											shceduleList.splice(foundScheduleIdx, 1);
+											scheduleList.splice(foundScheduleIdx, 1);
 										}
 										console.log(foundScheduleIdx);
 										console.log(scheduleList[foundScheduleIdx]);
