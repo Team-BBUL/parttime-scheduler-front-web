@@ -346,6 +346,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				axios.delete(`/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
 				.then((response) =>{
 					console.log("삭제성공");
+					setScheduleList([]);
 				});
 			} catch (error){
 				console.error('API 요청 에러:', error);
