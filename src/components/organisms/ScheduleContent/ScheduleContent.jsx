@@ -460,7 +460,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 										if(allFalse){
 											scheduleList.splice(foundScheduleIdx, 1);
 										}
-										scheduleList = scheduleList.filter(schedule => !schedule.time.every(timeValue => timeValue === false));
+										// scheduleList = scheduleList.filter(schedule => !schedule.time.every(timeValue => timeValue === false));
 										console.log("foundScheduleIdx : ",foundScheduleIdx);
 										console.log("scheduleList[foundScheduleIdx] : ",scheduleList[foundScheduleIdx]);
 										// console.log(hourIndex);
