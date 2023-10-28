@@ -130,8 +130,8 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 	const [currentVersion, setCurrentVersion] = useState();
 	const [scheduleList, setScheduleList] = useState([]);
 	useEffect(() => {
+		setScheduleList([]);
 		if(aiMakedSchedule.length!==0){
-			setScheduleList([]);
 			console.log("자동편성 완료");
 			console.log(aiMakedSchedule);
 			setScheduleList(aiMakedSchedule);
@@ -161,12 +161,12 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				}
 				
 				// 응답에서 date 배열 추출  
-				const dateArray = response.data.date;
+				const resScheduleList = response.data.date;
 				setCurrentVersion(response.data.time_stamp);
 				console.log(currentVersion);
 				// console.log(response.data.date);
 				// date 배열을 scheduleList 상태에 저장
-				setScheduleList(dateArray);
+				setScheduleList(resScheduleList);
 				// console.log(scheduleList);
 				// console.log(scheduleList.length);
 				// console.log(scheduleList);
