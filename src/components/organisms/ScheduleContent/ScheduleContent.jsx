@@ -571,6 +571,9 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		</div>
 		<div style={{ display: "flex", textAlign: 'center' }}>
 			<ScheduleEmployee userList={userList}  />
+			<button className="delete-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center', backgroundColor: 'red'}} onClick={handleDelete}>
+			삭제
+			</button>			
 			<button className="save-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center'}} onClick={handleSave}>
       		저장
     		</button>
@@ -586,9 +589,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 			</SavedModal>
 			)
 		}
-		<button className="save-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center', backgroundColor: 'white'}} onClick={handleDelete}>
 
-    	</button>
 		</div>
 	);
 };
