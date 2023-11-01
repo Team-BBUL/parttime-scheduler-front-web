@@ -570,11 +570,14 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 
 		</div>
 		<div style={{ display: "flex", textAlign: 'center' }}>
+			<div
+				style={{width: '40px', backgroundColor: 'white'}}
+			></div>
 			<ScheduleEmployee userList={userList}  />
-			<button className="delete-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center', backgroundColor: 'red'}} onClick={handleDelete}>
+			<button className="delete-button" style={{flex: 1, fontsize: '20medium', margin: '20px', justifyContent: 'center', backgroundColor: 'gray'}} onClick={handleDelete}>
 			삭제
 			</button>			
-			<button className="save-button" style={{flex: 1, fontsize: '20medium', height: '50px', justifyContent: 'center'}} onClick={handleSave}>
+			<button className="save-button" style={{flex: 1, fontsize: '20medium', margin: '20px', justifyContent: 'center'}} onClick={handleSave}>
       		저장
     		</button>
 		</div>
