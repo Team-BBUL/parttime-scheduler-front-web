@@ -7,6 +7,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
+// 전역 스타일 설정
+document.body.style.width = '1920px';
+document.body.style.height = '1080px';
+document.body.style.margin = '0';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
