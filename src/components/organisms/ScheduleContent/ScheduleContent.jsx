@@ -404,7 +404,12 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		  openModal();
 		}
 	  }, [showModal]);
-	const isMobile = window.innerWidth <= 767;
+	const isMobile = window.innerWidth < 1920;
+	useEffect(() => {
+		if (isMobile) {
+			document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1080, height=2480, initial-scale=1, maximum-scale=1, user-scalable=no');
+		  }
+		}, []);
 	return (
 		<div>
 		<div className={styles.schedule__content} style={{ display: "flex" }}>
