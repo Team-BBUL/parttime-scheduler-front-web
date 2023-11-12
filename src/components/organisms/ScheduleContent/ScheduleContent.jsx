@@ -407,7 +407,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 	const isMobile = window.innerWidth < 1920;
 	useEffect(() => {
 		if (isMobile) {
-			document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1080, height=2480, initial-scale=0.35');
+			document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1080, height=2480, initial-scale=0.35, maximum-scale=0.35, user-scalable=no');
 		  }
 		}, []);
 	return (
