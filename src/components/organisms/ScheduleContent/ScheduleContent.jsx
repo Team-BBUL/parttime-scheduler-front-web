@@ -404,7 +404,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		  openModal();
 		}
 	  }, [showModal]);
-	
+	const isMobile = window.innerWidth <= 767;
 	return (
 		<div>
 		<div className={styles.schedule__content} style={{ display: "flex" }}>
@@ -560,6 +560,8 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 					
 				</ul>
 			</div>
+			{isMobile ? (
+            // Render the WorkingTime component only if not on a mobile device
 			<div style={{ flex: 1 }}>
 				<div className="sidebar">
 					{/* <Warning /> */}
@@ -567,6 +569,8 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 
 				</div>
 			</div>
+          	) : null}
+
 
 		</div>
 		<div style={{ display: "flex", textAlign: 'center' }}>
