@@ -560,7 +560,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 					
 				</ul>
 			</div>
-			{isMobile ? (
+			{isMobile ?  null : (
             // Render the WorkingTime component only if not on a mobile device
 			<div style={{ flex: 1 }}>
 				<div className="sidebar">
@@ -569,7 +569,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 
 				</div>
 			</div>
-          	) : null}
+          	)}
 
 
 		</div>
