@@ -10,18 +10,31 @@ import RegistStorePage from "./pages/registStore";
 
 // const [scrollPosition, setScrollPosition] = useState(0);
 function App() {
+	const isMobile = window.innerWidth < 1920;
 	return (
-		<Layout>
-			<Routes>
-				<Route path="/schedule" element={<SchedulePage />} />
-				<Route path="/login" element={<LoginPage />} />
-				<Route path="/signup" element={<SignUpPage />} />
-				<Route path="/registstore" element={<RegistStorePage />} />
-				<Route path="/accountdetails" element={<AccountDetailsPage />} />
-				<Route path="/*" element={<LoginPage />} />
-			</Routes>
-		</Layout>
-		
+		<>
+			{isMobile ? (
+				<Routes>
+					<Route path="/schedule" element={<SchedulePage />} />
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="/signup" element={<SignUpPage />} />
+					<Route path="/registstore" element={<RegistStorePage />} />
+					<Route path="/accountdetails" element={<AccountDetailsPage />} />
+					<Route path="/*" element={<LoginPage />} />
+				</Routes>
+			) : (
+				<Layout>
+					<Routes>
+						<Route path="/schedule" element={<SchedulePage />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route path="/signup" element={<SignUpPage />} />
+						<Route path="/registstore" element={<RegistStorePage />} />
+						<Route path="/accountdetails" element={<AccountDetailsPage />} />
+						<Route path="/*" element={<LoginPage />} />
+					</Routes>
+				</Layout>
+			)}
+		</>		
 	);
 }
 
