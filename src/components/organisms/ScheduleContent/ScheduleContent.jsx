@@ -398,12 +398,20 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		}
 	};
 	const [showModal, setShowModal] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
     const openModal = () => {
         setShowModal(true);
     };
 
     const closeModal = () => {
         setShowModal(false);
+    };
+	const openDeleteModal = () => {
+        setShowDeleteModal(true);
+    };
+
+    const closeDeleteModal = () => {
+        setShowDeleteModal(false);
     };
 	useEffect(() => {
 		if (showModal) {
@@ -589,7 +597,12 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				style={{width: '40px', backgroundColor: 'white'}}
 			></div>
 			<ScheduleEmployee userList={userList}  />
-			<button className="delete-button" style={{flex: 1, fontsize: '20medium', margin: '20px', justifyContent: 'center', backgroundColor: 'gray'}} onClick={handleDelete}>
+			<button 
+				className="delete-button" 
+				style={{flex: 1, fontsize: '20medium', margin: '20px', justifyContent: 'center', backgroundColor: 'gray'}} 
+				onClick={()=>{
+					setShowDeleteModal();
+				}}>
 			삭제
 			</button>			
 			<button className="save-button" style={{flex: 1, fontsize: '20medium', margin: '20px', justifyContent: 'center'}} onClick={handleSave}>
@@ -607,7 +620,20 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 			</SavedModal>
 			)
 		}
+		{showDeleteModal &&(			
+			<SavedModal
+				closeModal={closeDeleteModal}
+				headerTitle={<div>
+					삭제가 완료되었습니다.
+				</div>}
+				children={                <button onClick={closeDeleteModal}>
+				취소
+			</button>}
 
+			>
+			</SavedModal>
+			)
+		}
 		</div>
 	);
 };
