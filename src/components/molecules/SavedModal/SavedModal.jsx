@@ -24,10 +24,16 @@ function SavedModal({ closeModal, size, headerTitle, children }) {
                 <div className="modal-header">
                     {headerTitle}
                 </div>
+                <div
+                style={{display: 'flex'}}
+                >
                 {children}
-                <button onClick={closeModal}>
+                <button
+                    style={{width: '170px'}} 
+                    onClick={closeModal}>
                         확인
                     </button>
+                </div>
                 {/* <hr style={{ width: "100%" }}></hr> */}
                 {/* 모달 컨텐츠 */}
                 {/* <div className="modal-body">{children}</div> */}
