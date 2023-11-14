@@ -370,12 +370,16 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				axios.delete(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
 				.then((response) =>{
 					console.log("삭제성공");
-					openModal();
+					try{
 						axios.post(`${serverURL}/api/schedule/${storeId}`, postData, axiosConfig)
 						.then((response) => {
 							console.log("등록성공");
-
+							openModal();
 						});
+					} catch(error) {
+						console.error('등록 에러 : ', error);
+						openModal();
+					}
 
 				});
 			} catch (error){
