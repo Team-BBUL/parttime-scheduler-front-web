@@ -129,6 +129,7 @@ const SchedulePage = () => {
 					schedule.day=formDay;
 				})
 				setAiScheduleList(dateArray);
+				setAiMake(false);
 				openModal();
 			})
 			.catch((error) => {
