@@ -148,7 +148,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		const storeId = localStorage.getItem('storeId');
 		const roleId = localStorage.getItem('roleId');
 		const version = '2023-06-11T22:03:58';
-		setCurrentVersion();
+		setCurrentVersion('2023-06-11T22:03:58');
 
 		
 			axios.get(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${version}&year=${year}&month=${month}&day=${day}`, axiosConfig)
