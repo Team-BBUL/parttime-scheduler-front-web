@@ -348,6 +348,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 					console.log("삭제성공");
 					setScheduleList([]);
 					closeDeleteModal();
+					openDeletedModal();
 				});
 			} catch (error){
 				console.error('API 요청 에러:', error);
@@ -400,6 +401,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 	};
 	const [showModal, setShowModal] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [showDeletedModal, setShowDeletedModal] = useState(false);
     const openModal = () => {
         setShowModal(true);
     };
@@ -414,6 +416,13 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
     const closeDeleteModal = () => {
         setShowDeleteModal(false);
     };
+	const openDeletedModal = () => {
+        setShowDeletedModal(true);
+    };
+
+    const closeDeletedModal = () => {
+        setShowDeletedModal(false);
+    };	
 	useEffect(() => {
 		if (showModal) {
 		  openModal();
@@ -641,6 +650,17 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 			</SavedModal>
 			)
 		}
+		{showDeletedModal &&(			
+			<SavedModal
+				closeModal={closeDeletedModal}
+				headerTitle={<div>
+					삭제가 완료되었습니다.
+				</div>}
+
+			>
+			</SavedModal>
+			)
+		}		
 		</div>
 	);
 };
