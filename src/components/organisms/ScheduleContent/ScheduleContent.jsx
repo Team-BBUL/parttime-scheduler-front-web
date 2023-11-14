@@ -341,7 +341,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		const day = startDate.getDate();		
 		const roleId = localStorage.getItem('roleId');
 		const storeId = localStorage.getItem('storeId');
-		
+		setCurrentVersion('2023-06-11T22:03:58');
 			try{
 				axios.delete(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
 				.then((response) =>{
