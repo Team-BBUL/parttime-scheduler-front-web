@@ -10,7 +10,7 @@ import RegistStorePage from "./pages/registStore";
 
 // const [scrollPosition, setScrollPosition] = useState(0);
 function App() {
-	const isMobile = window.innerWidth < 1920;
+	const isMobile = window.innerWidth < 1500;
 	return (
 		<>
 			{isMobile ? (
