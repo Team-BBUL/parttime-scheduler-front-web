@@ -387,6 +387,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 			}
 		} else {
 			try{
+				console.log("not currentVersion");
 				axios.post(`${serverURL}/api/schedule/${storeId}`, postData, axiosConfig)
 				.then((response) => {
 					console.log("등록성공");
