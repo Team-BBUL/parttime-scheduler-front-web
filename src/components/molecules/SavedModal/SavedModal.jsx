@@ -16,7 +16,8 @@ function SavedModal({ closeModal, size, headerTitle, children }) {
             <div 
                 className="modals" 
                 style={{ textAlign: "center",
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    display: "flex"
                 }}
             >
                 {/* 헤더 제목 */}
