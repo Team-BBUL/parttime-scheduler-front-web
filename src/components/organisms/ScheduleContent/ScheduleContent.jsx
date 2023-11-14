@@ -162,8 +162,8 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				
 				// 응답에서 date 배열 추출  
 				const resScheduleList = response.data.date;
-				setCurrentVersion(response.data.time_stamp);
-				console.log(currentVersion);
+				// setCurrentVersion(response.data.time_stamp);
+				// console.log(currentVersion);
 				// console.log(response.data.date);
 				// date 배열을 scheduleList 상태에 저장
 				setScheduleList(resScheduleList);
@@ -341,7 +341,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		const day = startDate.getDate();		
 		const roleId = localStorage.getItem('roleId');
 		const storeId = localStorage.getItem('storeId');
-		setCurrentVersion('2023-06-11T22:03:58');
+		
 			try{
 				axios.delete(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
 				.then((response) =>{
