@@ -29,7 +29,7 @@ function SavedModal({ closeModal, size, headerTitle, children }) {
                     </button>
                 {/* <hr style={{ width: "100%" }}></hr> */}
                 {/* 모달 컨텐츠 */}
-                <div className="modal-body">{children}</div>
+                {/* <div className="modal-body">{children}</div> */}
             </div>
         </div>
     );
