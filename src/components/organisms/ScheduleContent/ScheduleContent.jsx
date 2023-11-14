@@ -347,6 +347,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				.then((response) =>{
 					console.log("삭제성공");
 					setScheduleList([]);
+					closeDeleteModal();
 				});
 			} catch (error){
 				console.error('API 요청 에러:', error);
@@ -622,13 +623,19 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		}
 		{showDeleteModal &&(			
 			<SavedModal
-				closeModal={closeDeleteModal}
+				closeModal={handleDelete}
 				headerTitle={<div>
-					삭제가 완료되었습니다.
-				</div>}
-				children={                <button onClick={closeDeleteModal}>
+					스케줄을 정말 삭제하시겠습니까?
+				</div>
+				}
+				children={                
+				<button 
+					style={{backgroundColor: "gray"}}
+					onClick={closeDeleteModal}
+				>
 				취소
-			</button>}
+				</button>
+				}
 
 			>
 			</SavedModal>

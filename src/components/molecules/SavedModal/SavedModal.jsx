@@ -23,6 +23,7 @@ function SavedModal({ closeModal, size, headerTitle, children }) {
                 <div className="modal-header">
                     {headerTitle}
                 </div>
+                {children}
                 <button onClick={closeModal}>
                         확인
                     </button>
