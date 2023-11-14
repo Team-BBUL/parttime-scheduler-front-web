@@ -343,7 +343,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 		const storeId = localStorage.getItem('storeId');
 		
 			try{
-				axios.delete(`/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
+				axios.delete(`${serverURL}/api/schedule/${storeId}?id=${roleId}&version=${currentVersion}&year=${year}&month=${month}&day=${day}`, axiosConfig)
 				.then((response) =>{
 					console.log("삭제성공");
 					setScheduleList([]);
