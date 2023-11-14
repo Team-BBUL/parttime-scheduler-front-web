@@ -630,7 +630,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				}
 				children={                
 				<button 
-					style={{backgroundColor: "gray", width: '170px'}}
+					style={{backgroundColor: "gray", width: '120px'}}
 					onClick={closeDeleteModal}
 				>
 				취소

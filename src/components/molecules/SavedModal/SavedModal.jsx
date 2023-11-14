@@ -16,8 +16,7 @@ function SavedModal({ closeModal, size, headerTitle, children }) {
             <div 
                 className="modals" 
                 style={{ textAlign: "center",
-                    alignItems: 'center',
-                    display: "flex"
+                    alignItems: 'center'
                 }}
             >
                 {/* 헤더 제목 */}
@@ -29,7 +28,7 @@ function SavedModal({ closeModal, size, headerTitle, children }) {
                 >
                 {children}
                 <button
-                    style={{width: '170px'}} 
+                    style={{width: '120px'}} 
                     onClick={closeModal}>
                         확인
                     </button>
