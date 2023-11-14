@@ -601,7 +601,7 @@ const ScheduleContent = ({ startDate, endDate, dateArray, aiMakedSchedule }) => 
 				className="delete-button" 
 				style={{flex: 1, fontsize: '20medium', margin: '20px', justifyContent: 'center', backgroundColor: 'gray'}} 
 				onClick={()=>{
-					setShowDeleteModal();
+					openDeleteModal();
 				}}>
 			삭제
 			</button>			
